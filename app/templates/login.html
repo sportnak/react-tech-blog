@@ -15,7 +15,7 @@
 	}
 	</script>
 	<h1>Sign In</h1>
-	<form action='' method='post' name='login'>
+	<form class="form-horizontal" action='' method='post' name='login'>
 		{{ form.hidden_tag() }}
 		<p>
 			Please enter your OpenID, or select one of the providers below:<br>
@@ -27,7 +27,7 @@
 				<a href="javascript:set_openid('{{ pr.url }}', '{{ pr.name }}');">{{ pr.name }}</a> |
 			{% endfor %}
 		</p>
-		<p>{{ form.remember_me }} Remember Me</p>
-		<p><input type='submit' value='Sign In'></p>
+		<label class="checkbox">{{ form.remember_me }} Remember Me</label>
+		<p><button type='submit' class="btn">Sign In!</button></p>
 	</form>
 {% endblock %}
