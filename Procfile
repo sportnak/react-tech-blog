@@ -1,3 +1,3 @@
-web: gunicorn --log-file - app:app
+web: gunicorn --log-file=- app:app
 init: python db_create.py
 upgrade: python db_upgrade.py
