@@ -18,3 +18,5 @@ pbr==0.10.7
 six==1.9.0
 sqlalchemy-migrate==0.9.4
 sqlparse==0.1.14
+psycopg2==2.6.1
+
