@@ -1,0 +1,36 @@
+
+{%extends "cards.html" %}
+
+{% block content %}
+	<div class="container">
+		<h1>Register</h1>
+		<form class="form-horizontal" action='' method='post' name='register'>
+			{{ form.hidden_tag() }}
+			<p>
+				Please fill out the following fields to sign up:<br>
+				<div class ="input-group">
+					{{ form.username(class_ = 'form-control', placeholder = 'User Name' )}}<br><br>
+				</div>
+				{% for error in form.username.errors %}
+					<div class='alert alert-danger' role='alert'>[{{ error }}]</div>
+				{% endfor %}
+				<div class ="input-group">
+					{{ form.email(class_ = 'form-control', placeholder = 'Email Address' )}}<br><br>
+				</div>
+				{% for error in form.email.errors %}
+					<div class='alert alert-danger' role='alert'>[{{ error }}]</div>
+				{% endfor %}
+				<div class ="input-group">
+					{{ form.password(class_ = 'form-control', placeholder = 'Password' )}}<br><br>
+				</div>
+				{% for error in form.password.errors %}
+					<div class='alert alert-danger' role='alert'>[{{ error }}]</div>
+				{% endfor %}
+				<div class ="input-group">
+					{{ form.confirm(class_ = 'form-control', placeholder = 'Confirm Password' )}}<br><br>
+				</div>
+			</p>
+			<p><button type='submit' class="btn">Register</button></p>
+		</form>
+	</div>
+{% endblock %}

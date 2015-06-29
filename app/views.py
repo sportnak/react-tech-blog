@@ -1,10 +1,38 @@
-from flask import render_template, flash, redirect, session, url_for, request, g
-from flask.ext.login import login_user, logout_user, current_user, login_required
-from app import app, db, lm, oid
-from .forms import LoginForm, EditForm, PostForm
-from .models import User, Post
 from datetime import datetime
-from config import POSTS_PER_PAGE 
+from flask import send_from_directory, make_response, render_template, flash, redirect, session, url_for, request, g
+from app import app, db, lm
+from .forms import LoginForm, RegisterForm, PostForm
+from werkzeug import generate_password_hash, check_password_hash
+from flask.ext.login import login_user, logout_user, current_user, login_required
+from .models import User, Card, Post
+
+@app.route('/resume')
+def resume():
+	return render_template('resume.html')
+
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index')
+@app.route('/index/<string:category>', methods=['GET', 'POST'])
+def index(category = "None"):
+	category = category.lower()
+	return render_template('index.html',
+							title='Home',
+							category = category)
+
+@login_required
+@app.route('/home', methods=['GET', 'POST'])
+def home():
+
+	if g.user is not None and g.user.is_authenticated():
+		session['user_id'] = g.user.id
+		user = g.user
+		users = User.query.all();
+		games = [i for i in users[0].player if not i.started]
+		return render_template('home.html',
+								user=user,
+								game=games)
+	else:
+		return redirect(url_for('login'))
 
 @app.before_request
 def before_request():
@@ -14,146 +42,102 @@ def before_request():
 		db.session.add(g.user)
 		db.session.commit()
 
-@app.route('/login', methods=['GET', 'POST'])
-@oid.loginhandler
-def login():
-	if g.user is not None and g.user.is_authenticated():
-		return redirect(url_for('index'))
-	form = LoginForm()
-	if form.validate_on_submit():
-		session['remember_me'] = form.remember_me.data
-		print(form.openid.data)
-		return oid.try_login(form.openid.data, ask_for=['nickname', 'email'])
-	return render_template('login.html',
-							title='Sign In',
-							form = form,
-							providers=app.config['OPENID_PROVIDERS'])
-
-@app.route('/', methods=['GET', 'POST'])
-@app.route('/index', methods=['GET', 'POST'])
-@app.route('/index/<int:page>', methods=['GET', 'POST'])
-@login_required
-def index(page=1):
-	form = PostForm()
-	if form.validate_on_submit():
-		post = Post(body=form.post.data, timestamp=datetime.utcnow(), author = g.user)
-		db.session.add(post)
-		db.session.commit()
-		flash('Your post is now live!')
-		return redirect(url_for('index')) #must redirect in order to disallow any reposting from a 'refresh'
-	user = g.user
-	posts = g.user.followed_posts().paginate(page, POSTS_PER_PAGE, False)
-
-	return render_template('index.html',
-							title='Home',
-							user=user,
-							form=form,
-							posts = posts)
-
 @lm.user_loader
 def load_user(id):
 	return User.query.get(int(id))
 
-@oid.after_login
-def after_login(resp):
-	if resp.email is None or resp.email == '':
-		flash('Invalid login. Please try again.')
-		return redirect(url_for('login'))
-	user = User.query.filter_by(email=resp.email).first()
-	if user is None:
-		nickname = resp.nickname
-		if nickname is None or nickname == '':
-			nickname = resp.email.split('@')[0]
-		nickname = User.make_unique_nickname(nickname)
-		user = User(nickname=nickname, email=resp.email)
-		db.session.add(user)
-		db.session.commit()
-		db.session.add(user.follow(user))
-		db.session.commit()
-	remember_me = False
-	if 'remember_me' in session:
-		remember_me = session['remember_me']
-		session.pop('remember_me', None)
-	login_user(user, remember = remember_me)
-	return redirect(request.args.get('next') or url_for('index'))
-
 @app.route('/logout')
 def logout():
 	logout_user()
-	return redirect(url_for('index'))
+	return redirect(url_for('home'))
 
-@app.route('/user/<nickname>')
-@app.route('/user/<nickname>/<int:page>')
-@login_required
-def user(nickname, page=1):
-	user = User.query.filter_by(nickname=nickname).first()
-	if user == None:
-		flash('User %s not found.' % nickname)
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+	if g.user is not None and g.user.is_authenticated():
 		return redirect(url_for('index'))
-	posts = user.posts.paginate(page, POSTS_PER_PAGE, False)
-	return render_template('user.html',
-							user = user,
-							posts = posts)
+	form = LoginForm()
+	if form.validate_on_submit() and 'register' not in request.form:
+		session['remember_me'] = form.remember_me.data
+		if form.validate():
+			remember_me = False
+			user = User.query.filter_by(username=form.username.data).first()
+			if 'remember_me' in session:
+				remember_me = session['remember_me']
+				session.pop('remember_me', None)
+			login_user(user, remember = remember_me)
+			return redirect(request.args.get('next') or url_for('index'))
+		return redirect(url_for('index'))
+	if 'register' in request.form:
+		return redirect(url_for('register'))
+	return render_template('login.html',
+							title='Sign In',
+							form = form)
 
-@app.route('/edit', methods=['GET', 'POST'])
-@login_required
-def edit():
-	form = EditForm(original_nickname =g.user.nickname)
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+	if g.user is not None and g.user.is_authenticated():
+		return redirect(url_for('index'))
+
+	form = RegisterForm()
 	if form.validate_on_submit():
-		g.user.nickname = form.nickname.data
-		g.user.about_me = form.about_me.data
-		db.session.add(g.user)
-		db.session.commit()
-		flash('Your changes have been saved.')
-		return redirect(url_for('edit'))
+		if form.validate():
+			g.user.username = form.username.data
+			g.user.email = form.email.data
+			g.user.password = generate_password_hash(form.password.data)
+			u = User(username = form.username.data, email = form.email.data, password = g.user.password)
+			db.session.add(u)
+			db.session.commit()
+
+			flash('You have been registered!')
+			return redirect(request.args.get('next') or url_for('index'))
+		return redirect(url_for('index'))
+	return render_template('register.html',
+							title='Register',
+							form = form)
+
+@login_required
+@app.route('/post', methods=['GET', 'POST'])
+def post():
+	if g.user is None:
+		return redirect(url_for('index'))
 	else:
-		form.nickname.data = g.user.nickname
-		form.about_me.data = g.user.about_me
-	return render_template('edit.html', form=form)
+		form = PostForm()
+		if form.validate_on_submit():
+			if form.validate():
+				post = Post(title = form.title.data, 
+					content = form.content.data, 
+					author = 'Michael Nakayama', 
+					date_created = datetime.utcnow(),
+					category = form.category.data)
+				db.session.add(post)
+				db.session.commit()
 
-@app.route('/follow/<nickname>')
-@login_required
-def follow(nickname):
-	user = User.query.filter_by(nickname=nickname).first()
-	if user is None:
-		flash('User %s not found.' % nickname)
-		return redirect(url_for('index'))
-	if user == g.user:
-		flash('You can\'t follow yourself!')
-		return redirect(url_for('user', nickname=nickname))
-	u = g.user.follow(user)
-	if u is None:
-		flash('Cannot follow ' + nickname + '.')
-		return redirect(url_for('user', nickname=nickname))
-	db.session.add(u)
-	db.session.commit()
-	flash('You are now following ' + nickname + '!')
-	return redirect(url_for('user', nickname=nickname))
+				flash('Your post has been sent!')
+				return redirect(url_for('index'))
+			else:
+				flash('The validation failed')
+				return render_template('post.html',
+					form = form)
+		return render_template('post.html',
+			form = form)
 
-@app.route('/unfollow/<nickname>')
-@login_required
-def unfollow(nickname):
-	user = User.query.filter_by(nickname=nickname).first()
-	if user is None:
-		flash('User %s not found.' % nickname)
-		return redirect(url_for('index'))
-	if user == g.user:
-		flash('You can\'t unfollow yourself!')
-		return redirect(url_for('user', nickname=nickname))
-	u = g.user.unfollow(user)
-	if u is None:
-		flash('Cannot unfollow ' + nickname + '.')
-		return redirect(url_for('user', nickname=nickname))
-	db.session.add(u)
-	db.session.commit()
-	flash('You have stopped following ' + nickname + '.')
-	return redirect(url_for('user', nickname=nickname))
+@app.route('/posts')
+@app.route('/posts/<string:category>')
+def posts(category = "None"):
+	category = category.lower()
+	list = []
+	posts = Post.query.all();
+	i = 0
+	for post in posts:
+		if str(post.category).lower() == category or category == "none":
+			data = {}
+			data['title'] = post.title
+			data['content'] = post.content
+			data['author'] = post.author
+			data['date_created'] = post.date_created.strftime("%Y-%m-%d %H:%M:%S")
+			data['category'] = str(post.category).lower()
+			list.append(data)
 
-@app.errorhandler(404)
-def not_found_error(error):
-	return render_template('404.html'), 404
+		
+	return str(list);
 
-@app.errorhandler(500)
-def internal_error(error):
-	db.session.rollback()
-	return render_template('500.html'), 500

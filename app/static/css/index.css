@@ -1,0 +1,64 @@
+/* The main body 
+/////////////////*/
+body{
+	font-family: myriad;
+}
+
+@font-face {
+    font-family: myriad;
+    src: url(/static/css/fonts/MYRIADPRO-REGULAR.otf);
+}
+
+#tech-content{ 
+	position: absolute;
+	width: 60%;
+}
+
+.container {
+	width: 80%;
+}
+
+@keyframes fadein{
+	from {opacity: 0;}
+	to {opacity: 1;}
+}
+
+@-webkit-keyframes fadein{
+	from {opacity: 0;}
+	to {opacity: 1;}
+}
+
+/* Message 
+/////////////////*/
+.content{
+	width: 80%;
+	background: blue;
+}
+
+.cont{
+	overflow-x: hidden;
+}
+
+/* Sidebar 
+/////////////////*/
+
+.sidebar{
+	color: #393333;
+	display: table;
+	position: absolute;
+	margin-top: 50px;
+	margin-right: 10%;
+	right: 0px;
+	height: 60%;
+	width: 15%;
+}
+
+.sidebar a{
+	color: inherit;
+}
+
+.inner-bar{
+	display: table-cell;
+	text-align: center;
+	vertical-align: middle;
+}

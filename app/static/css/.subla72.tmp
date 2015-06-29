@@ -1,0 +1,217 @@
+.preheader {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	margin: auto;
+	width: 3px;
+	height: 100%;
+	background: black;
+}
+
+.horizontal {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	width: 100%;
+	height: 3px;
+	background: black;
+}
+
+.header{
+	background: #3E484A;
+	position: absolute;
+	right: 0px;
+	width: 100%;
+	height: 100%;
+}
+
+.message{
+	width: 100%;
+	text-align: center;
+	position: relative;
+	display: inline-block;
+	margin-top: 5%;
+}
+
+.box {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 105px;
+	margin: auto;
+	width: 5px;
+	height: 5px;
+	padding-right: 240px;
+	text-align: center;
+}
+
+.circle {
+	background: transparent;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	width: 300px;
+	height: 300px;
+	border-radius: 150px;
+	-webkit-animation: spinCircle 30s infinite linear;
+}
+
+.circle-dot {
+	background: transparent;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	width: 325px;
+	height: 325px;
+	border-radius: 150px;
+	-webkit-animation: reverse spinCircle 30s infinite linear;
+}
+
+.white-circle {
+	background: transparent;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	width: 350px;
+	height: 350px;
+	border-radius: 150px;
+	-webkit-animation: spinCircle 30s infinite linear;
+}
+
+@-webkit-keyframes spinCircle{
+	from{}
+	to{transform: rotateZ(360deg);}
+}
+
+.wrap{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+	text-align: center;
+	perspective: 10000px;
+	perspective-origin: 50% 100px;
+}
+
+.message-box {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	margin: auto;
+	width: 400px;
+	height: 75px;
+	border: 2px green solid;
+}
+
+.find-box{
+	position: absolute;
+	top: 0;
+	left: 160px;
+	right: 0;
+	bottom: 300px;
+	margin: auto;
+	width: 80px;
+	height: 7px;
+	transform: rotateZ(-60deg);
+	background: #FFB100;
+}
+
+.cube {
+	transform: rotateY(40deg) rotateX(45deg);
+	-webkit-animation: spis 1s infinite linear;
+	position: relative;
+	width: 200px;
+	transform-style: preserve-3d;
+}
+
+@-webkit-keyframes spin{
+	from {transform: rotateY(45deg) rotateX(45deg) rotateZ(0);}
+	to {transform: rotateY(405deg) rotateX(405deg) rotateZ(360deg);}
+}
+
+.cube div {
+	position: absolute;
+	background: #00D2FF;
+	line-height: 150px;
+	width: 150px;
+	height: 150px;
+ 	box-shadow: inset 0 0 30px rgba(125,125,125,0.8);
+}
+
+.back {
+	transform: translateZ(-75px) rotateY(180deg);
+}
+
+.right {
+	transform: rotateY(-270deg) translate(75px);
+	transform-origin: top right;
+}
+
+.left {
+	transform: rotateY(270deg) translateX(-75px);
+	transform-origin: center left;
+}
+
+.left:hover{
+	-webkit-animation: moveLeft .5s ease;
+	-webkit-animation-fill-mode: forwards;
+}
+
+.top {
+	transform: rotateX(-90deg) translateY(-75px);
+	transform-origin: top center;
+}
+
+.bottom {
+	transform: rotateX(90deg) translateY(75px);
+	transform-origin: bottom center;
+}
+
+.bottom:hover {
+	-webkit-animation: moveBottom .5s ease;
+	-webkit-animation-fill-mode: forwards;
+}
+
+.front {
+	transform: translateZ(75px);
+}
+
+.front:hover{
+	-webkit-animation: moveFront .5s ease;
+	-webkit-animation-fill-mode: forwards;
+}	
+
+@-webkit-keyframes moveFront{
+	from {}
+	to {transform: translateZ(110px);}
+}
+
+@-webkit-keyframes moveLeft {
+	from {}
+	to {transform-origin: center left;
+		transform: translateX(-35px) translateZ(-75px) rotateY(270deg);}
+}
+
+@-webkit-keyframes moveBottom {
+	from {}
+	to {transform-origin: bottom center;
+		transform: rotateX(90deg) translateY(75px) translateZ(-35px);}
+}

@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+    <title>jQuery Example</title>
+    <script>
+      $(document).ready(function() {
+        function clicked(){
+          console.log('what');
+          FB.getLoginStatus(function(){
+            console.log('what');
+            console.log();
+          });
+        }
+
+        $.ajaxSetup({ cache: true });
+        $.getScript('//connect.facebook.net/en_US/sdk.js', function(){
+          FB.init({
+            appId: '1434353053535020',
+            version: 'v2.3' // or v2.0, v2.1, v2.0
+          });
+        });
+
+        document.getElementById('loginbutton').onclick = clicked;
+      });
+    </script>
+  </head>
+  <body>
+    <button id="loginbutton"> LOGIN </button>
+
+    <div style="width: 500px; height: 500px; margin-top: 200px; margin left: 200px;">TESTING</div>
+  </body>
+</html>

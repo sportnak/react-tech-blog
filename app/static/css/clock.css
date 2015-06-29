@@ -1,0 +1,56 @@
+.clock{
+	position: absolute;
+	width: 16%;
+	border: 2px white solid;
+	top: 0;
+	right: 0;
+	left: 28%;
+	bottom: 10%;
+}
+
+.minute{
+	transform-origin: center 100%;
+	background: green;
+	width: 3px;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	margin:auto;
+	margin-top: 0;
+}
+.hour{
+	transform-origin: center 100%;
+	background: black;
+	width: 3px;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	margin: auto;
+	margin-top: 0;
+}
+
+.second{
+	transform-origin: center 100%;
+	background: blue;
+	width: 3px;
+	position: absolute;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	top: 0;
+	margin: auto;
+	margin-top: 0;
+}
+
+.second.hovered{
+	-webkit-animation: seconds 1s infinite linear;
+}
+
+@-webkit-keyframes seconds {
+	from{}
+	to{360deg}
+}

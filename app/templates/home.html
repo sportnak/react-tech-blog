@@ -1,0 +1,51 @@
+{% include 'cards.html' %}
+
+{% block content %}
+
+<link rel=stylesheet type="text/css" href="../static/css/home.css">
+<body>
+	<br>
+	<div class='container-fluid'>
+		<div class='row'>
+			<div class='span2 sidebar' style="height:100%; position:fixed; margin-left:0px; margin-right:0px; border-right:2px solid #eee">
+				<ul class='nav nav-sidebar' style="text-align:center;">
+					<li>
+						<a href="#current" data-toggle="tab">Current Games</a>
+					</li>
+					<li >
+						<a href="#newgame" data-toggle="tab">New Game</a>
+					</li>
+					<li>
+						<a href="#stats" data-toggle="tab">Stats</a>
+					</li>
+					<li>
+						<a href="#friends" data-toggle="tab">Friends</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<div class="span8 offset2 tab-content nopadding noborder">
+		<div class="tab-pane active" id="current">
+			<h1>Current Games</h1>
+		</div>
+		<div class="tab-pane" id="newgame">
+			<h1>New Game</h1>
+			{% if game %}
+				<ul>
+				{% for games in game %}
+					<li>{{ games }} </li>
+				{% endfor %}
+				</ul>
+			{% endif %}
+		</div>
+		<div class="tab-pane" id="stats">
+			<h1>Stats</h1>
+		</div>
+		<div class="tab-pane" id="friends">
+			<h1>Friends</h1>
+		</div>
+	</div>
+</body>
+
+{% endblock %}
