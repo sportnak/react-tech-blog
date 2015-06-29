@@ -29,7 +29,7 @@ class User(db.Model):
 class Post(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	content = db.Column(db.String)
-	author = db.Column(db.Integer, db.ForeignKey('user.id'))
+	author = db.Column(db.String)
 	date_created = db.Column(db.DateTime)
 	title = db.Column(db.String)
 	category = db.Column(db.String)
