@@ -31,7 +31,8 @@ class RegisterForm(Form):
 		Length(min=7, max=54, message='Password must be at least 7 characters'),
 		EqualTo('confirm', message='Passwords must match')])
 	confirm = PasswordField('Confirm Password')
-	username = StringField('Username', validators=[DataRequired()])
+	username = StringField('Username', validators=[DataRequired(),
+		Length(min=7, max=120, message='Usename must be at least 7 characters')])
 
 	def validate(self):
 		if not Form.validate(self):
@@ -39,6 +40,10 @@ class RegisterForm(Form):
 		user = User.query.filter_by(username=self.username.data).first()
 		if user != None:
 			self.username.errors.append('This nickname is already in user. Please choose another one')
+			return False
+		emails = User.query.filter_by(email=self.email.data).first()
+		if emails != None:
+			self.email.errors.append('This email already belongs to a user. Contact me if the Forgot Password field is broken')
 			return False
 		return True
 
