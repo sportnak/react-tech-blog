@@ -89,7 +89,7 @@ def register():
 			db.session.commit()
 
 			flash('You have been registered!')
-			return redirect(request.args.get('next') or url_for('index'))
+			return redirezct(request.args.get('next') or url_for('index'))
 		return redirect(url_for('index'))
 	return render_template('register.html',
 							title='Register',
@@ -117,7 +117,6 @@ def post():
 			else:
 				flash('The validation failed')
 				return render_template('post.html',
-					user = g.user,
 					form = form)
 		return render_template('post.html',
 			form = form)
@@ -129,7 +128,7 @@ def posts(category = "None"):
 	list = []
 	posts = Post.query.all();
 	i = 0
-	for post in posts:
+	for post in reversed(posts):
 		if str(post.category).lower() == category or category == "none":
 			data = {}
 			data['title'] = post.title

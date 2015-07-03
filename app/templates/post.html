@@ -37,13 +37,13 @@
 						{% endfor %}
 					</div>
 				</p>
-				<p><button type='submit' id="post" class="btn">Submit</button></p>
+				<p><button type='submit' id="post" class="btn" style="display:none">Submit</button></p>
 			</form>
-			<button onClick = "fillContent({{user}})" class="btn">Submit</button>
+			<button onClick = "fillContent()" class="btn">Submit</button>
 		</div>
 		<script>
 			CKEDITOR.replace( 'content' );
-			function fillContent(user){
+			function fillContent(){
 				console.log(user);
 				var text = CKEDITOR.instances.content.getData();
 				$("#content").val(text);
