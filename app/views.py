@@ -5,6 +5,10 @@ from .forms import LoginForm, RegisterForm, PostForm
 from werkzeug import generate_password_hash, check_password_hash
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from .models import User, Card, Post
+import logging
+
+app.logger.addHandler(logging.StreamHandler(sys.stdout))
+app.logger.setLevel(logging.ERROR)
 
 @app.route('/resume')
 def resume():
