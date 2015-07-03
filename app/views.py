@@ -53,7 +53,7 @@ def logout():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-	if g.user is not None and g.user.is_authenticated():
+	if not g.user.is_anonymous and g.user.is_authenticated():
 		return redirect(url_for('index'))
 	form = LoginForm()
 	if form.validate_on_submit() and 'register' not in request.form:
@@ -75,7 +75,7 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-	if g.user is not None and g.user.is_authenticated():
+	if not g.user.is_anonymous and g.user.is_authenticated():
 		return redirect(url_for('index'))
 
 	form = RegisterForm()
@@ -98,9 +98,7 @@ def register():
 @login_required
 @app.route('/post', methods=['GET', 'POST'])
 def post():
-	if g.user is None:
-		return redirect(url_for('index'))
-	else:
+	if g.user.is_anonymous:
 		form = PostForm()
 		if form.validate_on_submit():
 			if form.validate():
@@ -120,6 +118,8 @@ def post():
 					form = form)
 		return render_template('post.html',
 			form = form)
+	else:
+		return redirect(url_for('index'))
 
 @app.route('/posts')
 @app.route('/posts/<string:category>')
