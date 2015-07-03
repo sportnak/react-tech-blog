@@ -117,6 +117,7 @@ def post():
 			else:
 				flash('The validation failed')
 				return render_template('post.html',
+					user = g.user,
 					form = form)
 		return render_template('post.html',
 			form = form)
