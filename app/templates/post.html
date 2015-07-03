@@ -10,7 +10,7 @@
 	    <script src="/static/js/build/JSXTransformer.js"></script>
 		<script src="/static/js/ckeditor/ckeditor.js"></script>
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Resume</title>
+		<title>Post</title>
 	</head>
 
 	<body>
@@ -39,15 +39,16 @@
 				</p>
 				<p><button type='submit' id="post" class="btn">Submit</button></p>
 			</form>
-			<button onClick = "fillContent()" class="btn">Submit</button>
+			<button onClick = "fillContent({{user}})" class="btn">Submit</button>
 		</div>
 		<script>
 			CKEDITOR.replace( 'content' );
-			function fillContent(){
+			function fillContent(user){
+				console.log(user);
 				var text = CKEDITOR.instances.content.getData();
 				$("#content").val(text);
+				$("#post").trigger("click");
 			}
-			console.log({{ user }});
 		</script>
 	</body>
 </html>
