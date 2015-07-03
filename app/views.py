@@ -5,18 +5,12 @@ from .forms import LoginForm, RegisterForm, PostForm
 from werkzeug import generate_password_hash, check_password_hash
 from flask.ext.login import login_user, logout_user, current_user, login_required
 from .models import User, Card, Post
-import sys
-import logging
-
-app.logger.addHandler(logging.StreamHandler(sys.stdout))
-app.logger.setLevel(logging.ERROR)
 
 @app.route('/resume')
 def resume():
 	return render_template('resume.html')
 
 @app.route('/', methods=['GET', 'POST'])
-@app.route('/index')
 @app.route('/index/<string:category>', methods=['GET', 'POST'])
 def index(category = "None"):
 	category = category.lower()
@@ -59,7 +53,7 @@ def logout():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if not g.user.is_anonymous and g.user.is_authenticated():
-		return redirect(url_for('/'))
+		return redirect(url_for('index'))
 	form = LoginForm()
 	if form.validate_on_submit() and 'register' not in request.form:
 		session['remember_me'] = form.remember_me.data
@@ -70,8 +64,8 @@ def login():
 				remember_me = session['remember_me']
 				session.pop('remember_me', None)
 			login_user(user, remember = remember_me)
-			return redirect(request.args.get('next') or url_for('/'))
-		return redirect(url_for('/'))
+			return redirect(request.args.get('next') or url_for('index'))
+		return redirect(url_for('index'))
 	if 'register' in request.form:
 		return redirect(url_for('register'))
 	return render_template('login.html',
@@ -81,7 +75,7 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 	if not g.user.is_anonymous and g.user.is_authenticated():
-		return redirect(url_for('/'))
+		return redirect(url_for('index'))
 
 	form = RegisterForm()
 	if form.validate_on_submit():
@@ -94,8 +88,8 @@ def register():
 			db.session.commit()
 
 			flash('You have been registered!')
-			return redirezct(request.args.get('next') or url_for('/'))
-		return redirect(url_for('/'))
+			return redirezct(request.args.get('next') or url_for('index'))
+		return redirect(url_for('index'))
 	return render_template('register.html',
 							title='Register',
 							form = form)
@@ -116,7 +110,7 @@ def post():
 				db.session.commit()
 
 				flash('Your post has been sent!')
-				return redirect(url_for('/'))
+				return redirect(url_for('index'))
 			else:
 				flash('The validation failed')
 				return render_template('post.html',
@@ -124,7 +118,7 @@ def post():
 		return render_template('post.html',
 			form = form)
 	else:
-		return redirect(url_for('/'))
+		return redirect(url_for('index'))
 
 @app.route('/posts')
 @app.route('/posts/<string:category>')
