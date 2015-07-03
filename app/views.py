@@ -54,7 +54,7 @@ def logout():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
 	if not g.user.is_anonymous and g.user.is_authenticated():
-		return redirect(url_for('index'))
+		return redirect(url_for('/'))
 	form = LoginForm()
 	if form.validate_on_submit() and 'register' not in request.form:
 		session['remember_me'] = form.remember_me.data
@@ -65,8 +65,8 @@ def login():
 				remember_me = session['remember_me']
 				session.pop('remember_me', None)
 			login_user(user, remember = remember_me)
-			return redirect(request.args.get('next') or url_for('index'))
-		return redirect(url_for('index'))
+			return redirect(request.args.get('next') or url_for('/'))
+		return redirect(url_for('/'))
 	if 'register' in request.form:
 		return redirect(url_for('register'))
 	return render_template('login.html',
@@ -76,7 +76,7 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 	if not g.user.is_anonymous and g.user.is_authenticated():
-		return redirect(url_for('index'))
+		return redirect(url_for('/'))
 
 	form = RegisterForm()
 	if form.validate_on_submit():
@@ -89,8 +89,8 @@ def register():
 			db.session.commit()
 
 			flash('You have been registered!')
-			return redirezct(request.args.get('next') or url_for('index'))
-		return redirect(url_for('index'))
+			return redirezct(request.args.get('next') or url_for('/'))
+		return redirect(url_for('/'))
 	return render_template('register.html',
 							title='Register',
 							form = form)
@@ -111,7 +111,7 @@ def post():
 				db.session.commit()
 
 				flash('Your post has been sent!')
-				return redirect(url_for('index'))
+				return redirect(url_for('/'))
 			else:
 				flash('The validation failed')
 				return render_template('post.html',
@@ -119,7 +119,7 @@ def post():
 		return render_template('post.html',
 			form = form)
 	else:
-		return redirect(url_for('index'))
+		return redirect(url_for('/'))
 
 @app.route('/posts')
 @app.route('/posts/<string:category>')
