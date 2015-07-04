@@ -97,7 +97,7 @@ def register():
 			db.session.commit()
 
 			flash('You have been registered!')
-			return redirezct(request.args.get('next') or url_for('index'))
+			return redirect(request.args.get('next') or url_for('index'))
 		return redirect(url_for('index'))
 	return render_template('register.html',
 							title='Register',
