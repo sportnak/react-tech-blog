@@ -41,7 +41,8 @@ def home():
 @app.before_request
 def before_request():
 	g.user = current_user
-	if g.user.is_anonymous and g.user.username is not None:
+	print(g.user.is_anonymous)
+	if not g.user.is_anonymous and g.user.username is not None:
 		g.user.anonymous = False
 	if g.user.is_authenticated():
 		g.user.last_seen = datetime.utcnow()
