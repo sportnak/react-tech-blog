@@ -152,5 +152,6 @@ def posts(category = "None"):
 @app.route('/view/<int:postid>')
 def view(postid="0"):
 	post = Post.query.filter_by(id=postid).first()
+	print(post.content)
 	return render_template('view.html',
 		post = post)
