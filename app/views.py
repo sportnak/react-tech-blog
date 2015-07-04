@@ -88,7 +88,7 @@ def register():
 			g.user.username = form.username.data
 			g.user.email = form.email.data
 			g.user.password = generate_password_hash(form.password.data)
-			u = User(username = form.username.data, email = form.email.data, password = g.user.password)
+			u = User(email = form.email.data, password = g.user.password, username = form.username.data)
 			db.session.add(u)
 			db.session.commit()
 
