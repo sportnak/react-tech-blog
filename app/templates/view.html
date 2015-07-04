@@ -1,0 +1,61 @@
+{% include 'base.html' %}
+
+{% block content %}
+
+<link rel=stylesheet type="text/css" href="../static/css/index.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<body>
+	<div id="posttitle" style="display:none; position:aboslute;">{{post.title}}</div>
+	<div id="author" style="display:none; position:aboslute;">Michael Nakayama</div>
+	<div id="date_created" style="display:none; position:aboslute;">{{post.date_created}}</div>
+	<div id="content" style="display:none; position:aboslute;">{{post.content}}</div>
+	<div class="container">
+		<div class="container-fluid home" id="main-panel">
+			<h1>Hello World! Welcome to my blog and online resume.</h1>
+			<hr>
+		</div>
+	</div>
+	<div class="container">
+		<div id='tech-content'>		
+		</div>
+	</div>
+</body>
+<script>
+window.onload = function(){
+	if(true){
+		var tech = $("#tech-content");
+		var container = document.createElement("div");
+		container.className = "box";
+
+		var content = document.createElement("h1");
+		content.innerHTML = "<p>There are no posts in this category</p>";
+		content.wordWrap = "break-word";
+		container.appendChild(content);
+		tech[0].appendChild(container);
+	} else {
+		var tech = $("#tech-content");
+		var container = document.createElement("div");
+		container.className = "box";
+
+		var title = document.createElement("h1");
+		title.innerHTML = $("#posttitle");
+		container.appendChild(title);
+
+		var content = document.createElement("div");
+		content.innerHTML = $("#content");
+		content.wordWrap = "break-word";
+		container.appendChild(content);
+
+
+		var meta = document.createElement("div");
+		meta.innerHTML = $("#date_created");
+		container.appendChild(meta);
+
+		tech[0].appendChild(container);
+	}
+};
+</script>
+
+
+
+{% endblock %}
