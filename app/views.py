@@ -41,8 +41,8 @@ def home():
 @app.before_request
 def before_request():
 	g.user = current_user
-	print(g.user.is_anonymous)
-	if not g.user.is_anonymous and g.user.username is not None:
+	print(g.user.is_anonymous())
+	if not g.user.is_anonymous() and g.user.username is not None:
 		g.user.anonymous = False
 	if g.user.is_authenticated():
 		g.user.last_seen = datetime.utcnow()
@@ -61,7 +61,7 @@ def logout():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-	if not g.user.is_anonymous and g.user.is_authenticated():
+	if not g.user.is_anonymous() and g.user.is_authenticated():
 		return redirect(url_for('index'))
 	form = LoginForm()
 	if form.validate_on_submit() and 'register' not in request.form:
@@ -83,7 +83,7 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-	if not g.user.is_anonymous and g.user.is_authenticated():
+	if not g.user.is_anonymous() and g.user.is_authenticated():
 		return redirect(url_for('index'))
 
 	form = RegisterForm()
@@ -106,7 +106,7 @@ def register():
 @login_required
 @app.route('/post', methods=['GET', 'POST'])
 def post():
-	if not g.user.anonymous and g.user.username == 'sportnak':
+	if not g.user.is_anonymous() and g.user.username == 'sportnak':
 		form = PostForm()
 		if form.validate_on_submit():
 			if form.validate():
