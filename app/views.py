@@ -102,6 +102,7 @@ def register():
 @login_required
 @app.route('/post', methods=['GET', 'POST'])
 def post():
+	print(g.user.username)
 	if not g.user.is_anonymous and g.user.username is not 'sportnak':
 		form = PostForm()
 		if form.validate_on_submit():
