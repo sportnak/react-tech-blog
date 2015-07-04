@@ -103,7 +103,7 @@ def register():
 @app.route('/post', methods=['GET', 'POST'])
 def post():
 	print(g.user.username == 'sportnak')
-	print(str(g.user.username) == 'sportnak')
+	print(g.user.is_anonymous)
 	if not g.user.is_anonymous and g.user.username == 'sportnak':
 		form = PostForm()
 		if form.validate_on_submit():
