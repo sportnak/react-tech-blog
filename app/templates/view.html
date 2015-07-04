@@ -42,7 +42,8 @@ window.onload = function(){
 		container.appendChild(title);
 
 		var content = document.createElement("div");
-		content.innerHTML = $("#content")[0].innerHTML;
+		var str =  $("#content")[0].innerHTML;
+		content.innerHTML = str.substring(1, str.length);
 		content.wordWrap = "break-word";
 		container.appendChild(content);
 
