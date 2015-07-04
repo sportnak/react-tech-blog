@@ -150,7 +150,7 @@ def posts(category = "None"):
 	return str(list);
 
 @app.route('/view/<int:postid>')
-def view(id="0"):
+def view(postid="0"):
 	post = Post.query.get(id=id)
 	return render_template('view.html',
 		post = post)
