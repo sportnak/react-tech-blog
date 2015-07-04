@@ -11,8 +11,17 @@
 	src: url(/static/css/CODE\ Bold.otf);
 }
 
+@font-face {
+	font-family: light_code;
+	src: url(/static/css/CODE\ Light.otf);
+}
+
 body{
 	font-family: myriad;
+}
+
+.tagline{
+	font-family: light_code;
 }
 
 .brandbar {
