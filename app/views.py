@@ -42,7 +42,7 @@ def home():
 def before_request():
 	g.user = current_user
 	if g.user.username is not None:
-		g.user.is_anonymous = False
+		g.user.anonymous = False
 	if g.user.is_authenticated():
 		g.user.last_seen = datetime.utcnow()
 		db.session.add(g.user)
@@ -54,8 +54,9 @@ def load_user(id):
 
 @app.route('/logout')
 def logout():
+	g.user.anonymous = True;
 	logout_user()
-	return redirect(url_for('home'))
+	return redirect(url_for('index'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -104,9 +105,7 @@ def register():
 @login_required
 @app.route('/post', methods=['GET', 'POST'])
 def post():
-	print(g.user.username == 'sportnak')
-	print(g.user.is_anonymous)
-	if not g.user.is_anonymous and g.user.username == 'sportnak':
+	if not g.user.anonymous and g.user.username == 'sportnak':
 		form = PostForm()
 		if form.validate_on_submit():
 			if form.validate():
