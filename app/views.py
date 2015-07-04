@@ -41,9 +41,6 @@ def home():
 @app.before_request
 def before_request():
 	g.user = current_user
-	print(g.user)
-	print(g.user.email)
-	print(g.user.username)
 	if g.user.is_authenticated():
 		g.user.last_seen = datetime.utcnow()
 		db.session.add(g.user)
@@ -105,7 +102,7 @@ def register():
 @login_required
 @app.route('/post', methods=['GET', 'POST'])
 def post():
-	if not g.user.is_anonymous and g.user.id is not 1:
+	if not g.user.is_anonymous and g.user.username is not 'sportnak':
 		form = PostForm()
 		if form.validate_on_submit():
 			if form.validate():
