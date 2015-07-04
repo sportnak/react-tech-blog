@@ -22,7 +22,7 @@
 </body>
 <script>
 window.onload = function(){
-	if($("#posttitle").innerHTML == null){
+	if($("#posttitle")[0].innerHTML == null){
 		var tech = $("#tech-content");
 		var container = document.createElement("div");
 		container.className = "box";
@@ -38,17 +38,17 @@ window.onload = function(){
 		container.className = "box";
 
 		var title = document.createElement("h1");
-		title.innerHTML = $("#posttitle").innerHTML;
+		title.innerHTML = $("#posttitle")[0].innerHTML;
 		container.appendChild(title);
 
 		var content = document.createElement("div");
-		content.innerHTML = $("#content").innerHTML;
+		content.innerHTML = $("#content")[0].innerHTML;
 		content.wordWrap = "break-word";
 		container.appendChild(content);
 
 
 		var meta = document.createElement("div");
-		meta.innerHTML = $("#date_created").innerHTML;
+		meta.innerHTML = $("#date_created")[0].innerHTML;
 		container.appendChild(meta);
 
 		tech[0].appendChild(container);
