@@ -10,14 +10,14 @@
 	    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	</head>
 	<div>
-		<body>
-			<div class="navbar navbar-inverse navbar-default" style="margin-bottom:0px; border-radius: 0px">
-				<div class="container">
-					<div class="navbar-header">
-						<a class="navbar-brand" href="/index">Cards Against Humanity... That works</a>
-					</div>
+		<div class="navbar navbar-inverse navbar-default" style="margin-bottom:0px; border-radius: 0px">
+			<div class="container">
+				<div class="navbar-header">
+					<a class="navbar-brand" href="/index">Cards Against Humanity... That works</a>
 				</div>
 			</div>
+		</div>
+		<body>
 			{% with messages = get_flashed_messages() %}
 				{% if messages %}
 					<ul>
