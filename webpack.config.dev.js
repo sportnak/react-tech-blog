@@ -19,7 +19,7 @@ module.exports = {
     ignore,
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
-    new cleanWebpack(['lib'])
+   // new cleanWebpack(['lib'])
   ],
   resolve: {
     extensions: ['', '.js']
