@@ -55,7 +55,7 @@
     "test": "test-app",
     "clean": "rm -rf lib",
     "watch-js": "./node_modules/.bin/babel src -d lib --experimental -w",
-    "web-server": "node lib/server/webpack",
+    "web-server": "npm run build && node lib/server/webpack",
     "server": "node lib/server/server",
     "start": "npm run build && npm run web-server & npm run server",
     "start-dev": "npm run build && npm run server",

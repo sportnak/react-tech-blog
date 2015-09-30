@@ -6,23 +6,23 @@ var ignore = new webpack.IgnorePlugin(new RegExp("/ckeditor/"))
 module.exports = {  
   devtool: 'inline-source-map',
   entry: [
-    'webpack-dev-server/client?http://0.0.0.0:8081',
-    'webpack/hot/only-dev-server',
     './lib/client/entry',
   ],
   output: {
     path: __dirname + '/public/js/',
     filename: 'app.js',
-    publicPath: 'http://0.0.0.0:8081/js/',
+    publicPath: 'http://localhost:8081/js/',
   },
   plugins: [
     ignore,
-    new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
    // new cleanWebpack(['lib'])
   ],
   resolve: {
     extensions: ['', '.js']
+  },
+  watchOptions: {
+    poll: false,
   },
   module: {
     loaders: [

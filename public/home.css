@@ -1,0 +1,10 @@
+.tagline {
+	display: none;
+	-webkit-animation: floatUp 1s ease;
+	-webkit-animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes floatUp{
+	from { opacity: 0;}
+	to {opacity: .9; transform: translateY(-50px);}
+}
