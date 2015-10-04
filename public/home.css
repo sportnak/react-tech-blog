@@ -1,3 +1,29 @@
+body {
+	overflow: hidden;
+}
+
+.cover-leave {
+	position: absolute;
+	-webkit-animation: floatOut 1.5s ease;
+	-webkit-animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes floatOut {
+	from {opacity: 1;}
+	to {opacity: 0; display:none;}
+}
+
+#posts {
+	display: none;
+	-webkit-animation: flyup 1.5s fast;
+	-webkit-animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes flyup {
+	from {opacity: 0;}
+	to {opacity: 1;}
+}
+
 .tagline {
 	display: none;
 	-webkit-animation: floatUp 1.5s ease;
