@@ -23611,6 +23611,9 @@
 		_createClass(AppController, [{
 			key: "componentDidMount",
 			value: function componentDidMount() {
+				if (window.location.hash.length > 0) {
+					window.location.hash = '';
+				}
 				util.ConvertToArray(document.querySelectorAll('.tagline')).forEach(function (tag) {
 					tag.style.display = 'initial';
 				});
@@ -23686,10 +23689,10 @@
 							),
 							React.createElement(
 								"div",
-								{ id: "showAdventure", className: "nav-button" },
+								{ id: "showAdventure", onClick: this.showPosts, className: "nav-button" },
 								React.createElement(
 									"a",
-									{ href: "#" },
+									{ href: "#Adventure" },
 									"Adventures"
 								)
 							)
@@ -23746,7 +23749,7 @@
 		var body = document.body,
 		    html = document.documentElement;
 		var height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-		console.log(height);
+
 		if (window.scrollY + window.innerHeight == height) {
 			var hashtag = window.location.href.substring(window.location.origin.length + 2);
 			if (hashtag) {
@@ -23901,6 +23904,12 @@
 		_createClass(PostStore, [{
 			key: 'handleCategoryPage',
 			value: function handleCategoryPage(posts) {
+				console.log(posts.clear);
+				if (posts.clear === -1) {
+					this.adventurePosts = [];
+					this.techPosts = [];
+					this.posts = [];
+				}
 				this.addToCategory(posts.posts, posts.posts.length);
 				this.category = posts.category;
 			}
@@ -25512,7 +25521,7 @@
 				var instance = this;
 				var start = start_id != null ? start_id : -1;
 				Ajax.Get('/database/posts-after/' + category + '/' + start, function (data) {
-					instance.actions.addToCategory({ posts: JSON.parse(data), category: category });
+					instance.actions.addToCategory({ posts: JSON.parse(data), category: category, clear: start });
 				});
 			}
 		}, {
