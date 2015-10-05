@@ -23558,7 +23558,6 @@
 	var React = __webpack_require__(1);
 
 	var AppController = __webpack_require__(197);
-	var PostContainer = __webpack_require__(199);
 	var PostController = __webpack_require__(219);
 	var Login = __webpack_require__(220);
 	//modify this one to be the errors file.
@@ -23567,7 +23566,6 @@
 	exports['default'] = React.createElement(
 		Route,
 		{ handler: AppController, path: '/' },
-		React.createElement(Route, { name: '/', handler: PostContainer }),
 		React.createElement(Route, { name: '/login', handler: Login }),
 		React.createElement(Route, { name: '/post', handler: PostController }),
 		React.createElement(Route, { name: 'server_error', handler: ServerErrorController })
@@ -23595,6 +23593,7 @@
 	var React = __webpack_require__(1);
 	var Router = __webpack_require__(157);
 	var util = __webpack_require__(198);
+	var PostContainer = __webpack_require__(199);
 
 	var RouteHandler = Router.RouteHandler;
 	var size = 48;
@@ -23641,6 +23640,7 @@
 			value: function showPosts() {
 				document.querySelector('.cover').classList.add('cover-leave');
 				document.querySelector('#posts').style.display = 'initial';
+				document.querySelector('body').style.overflow = 'visible';
 			}
 		}, {
 			key: "render",
@@ -23662,7 +23662,7 @@
 								{ id: "showPosts", onClick: this.showPosts, className: "nav-button" },
 								React.createElement(
 									"a",
-									{ href: "#" },
+									{ href: "#Tech" },
 									"Tech Blog"
 								)
 							),
@@ -23697,8 +23697,9 @@
 						React.createElement(
 							"div",
 							{ id: "posts", style: { display: 'none' } },
-							React.createElement(RouteHandler, null)
-						)
+							React.createElement(PostContainer, null)
+						),
+						React.createElement(RouteHandler, null)
 					)
 				);
 			}
@@ -23735,17 +23736,29 @@
 	var PostActions = __webpack_require__(214);
 	var PostItem = __webpack_require__(216);
 	var styles = __webpack_require__(218);
+	var util = __webpack_require__(198);
 
 	//yikes
 	var pageGlobal = 1;
+	var hashGlobal = '';
 
 	function checkBottom() {
 		var body = document.body,
 		    html = document.documentElement;
 		var height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-
+		console.log(height);
 		if (window.scrollY + window.innerHeight == height) {
-			PostActions.nextPage(pageGlobal);
+			var hashtag = window.location.href.substring(window.location.origin.length + 2);
+			if (hashtag) {
+				if (hashtag === hashGlobal) {
+					var last = util.ConvertToArray(document.querySelector('.post-box').children[0].children).slice(-1)[0];
+					PostActions.nextCategoryPage(hashtag, last.children[0].id);
+				} else {
+					PostActions.nextCategoryPage(hashtag);
+				}
+			} else {
+				PostActions.nextPage(pageGlobal);
+			}
 		}
 	}
 
@@ -23757,9 +23770,12 @@
 		},
 
 		componentDidMount: function componentDidMount() {
-			console.log('wat');
 			PostActions.loadPosts();
 			PostStore.listen(this.onChange);
+			window.addEventListener("hashchange", function () {
+				hashGlobal = window.location.href.substring(window.location.origin.length + 2);
+				PostActions.nextCategoryPage(window.location.href.substring(window.location.origin.length + 2));
+			});
 		},
 
 		componentWillUnmount: function componentWillUnmount() {
@@ -23772,23 +23788,71 @@
 			window.onscroll = checkBottom;
 		},
 
+		renderPost: function renderPost() {
+			return React.createElement(
+				'div',
+				{ className: 'post-box' },
+				React.createElement(
+					'ul',
+					{ style: styles.UlStyle },
+					this.state.posts.map(function (post) {
+						return React.createElement(
+							'li',
+							null,
+							React.createElement(PostItem, { post: post })
+						);
+					})
+				)
+			);
+		},
+
+		renderAdventure: function renderAdventure() {
+			var _this = this;
+
+			return React.createElement(
+				'div',
+				{ className: 'post-box' },
+				React.createElement(
+					'ul',
+					{ style: styles.UlStyle },
+					this.state.adventurePosts.map(function (post) {
+						return React.createElement(
+							'li',
+							null,
+							React.createElement(PostItem, { post: post, category: _this.state.category })
+						);
+					})
+				)
+			);
+		},
+
+		renderTech: function renderTech() {
+			var _this2 = this;
+
+			return React.createElement(
+				'div',
+				{ className: 'post-box' },
+				React.createElement(
+					'ul',
+					{ style: styles.UlStyle },
+					this.state.techPosts.map(function (post) {
+						return React.createElement(
+							'li',
+							null,
+							React.createElement(PostItem, { post: post, category: _this2.state.category })
+						);
+					})
+				)
+			);
+		},
+
 		render: function render() {
-			if (this.state.posts) {
-				return React.createElement(
-					'div',
-					{ className: 'post-box' },
-					React.createElement(
-						'ul',
-						{ style: styles.UlStyle },
-						this.state.posts.map(function (post) {
-							return React.createElement(
-								'li',
-								null,
-								React.createElement(PostItem, { post: post })
-							);
-						})
-					)
-				);
+			if (this.state.posts && this.state.category === '') {
+				return this.renderPost();
+			} else if (this.state.adventurePosts && this.state.category === 'Adventure') {
+				return this.renderAdventure();
+			} else if (this.state.techPosts && this.state.category === 'Tech') {
+				return this.renderTech();
 			} else {
 				return React.createElement(
 					'div',
@@ -23818,35 +23882,61 @@
 		function PostStore() {
 			_classCallCheck(this, PostStore);
 
+			this.category = '';
 			this.page = 1;
 			this.posts = [];
 			this.nextPage = [];
+			this.techPosts = [];
+			this.adventurePosts = [];
 
 			this.bindListeners({
 				handleUpdatePosts: Actions.UPDATE_POSTS,
 				handleLoadPosts: Actions.LOAD_POSTS,
-				handleNextPage: Actions.ADD_POSTS
+				handleNextPage: Actions.ADD_POSTS,
+				handleFilterPosts: Actions.FILTER_POSTS,
+				handleCategoryPage: Actions.ADD_TO_CATEGORY
 			});
 		}
 
 		_createClass(PostStore, [{
+			key: 'handleCategoryPage',
+			value: function handleCategoryPage(posts) {
+				this.addToCategory(posts.posts, posts.posts.length);
+				this.category = posts.category;
+			}
+		}, {
+			key: 'handleFilterPosts',
+			value: function handleFilterPosts(category) {
+				this.category = category;
+			}
+		}, {
 			key: 'handleLoadPosts',
 			value: function handleLoadPosts() {
+				this.category = '';
 				this.posts = [];
+				this.adventurePosts = [];
+				this.techPosts = [];
 				this.nextPage = [];
 				this.page = 1;
 			}
 		}, {
+			key: 'addToCategory',
+			value: function addToCategory(posts, length) {
+				for (var i = 0; i < length; i++) {
+					posts[i].content = this.decodeMarks(posts[i]);
+					if (posts[i].category === 'Tech') {
+						this.techPosts.push(posts[i]);
+					} else if (posts[i].category === 'Adventure') {
+						this.adventurePosts.push(posts[i]);
+					}
+				}
+			}
+		}, {
 			key: 'handleUpdatePosts',
 			value: function handleUpdatePosts(posts) {
-
+				var instance = this;
 				posts.posts.forEach(function (post) {
-					while (post.content.indexOf('&#39;') != -1) {
-						post.content = post.content.replace('&#39;', '\'');
-					}
-					while (post.content.indexOf('#39;') != -1) {
-						post.content = post.content.replace('#39;', '\'');
-					}
+					post.content = instance.decodeMarks(post);
 				});
 
 				for (var i = 0; i < 5; i++) {
@@ -23865,6 +23955,18 @@
 				}
 				this.nextPage = posts.posts;
 				this.page = posts.page + 1;
+			}
+		}, {
+			key: 'decodeMarks',
+			value: function decodeMarks(post) {
+				var content = post.content;
+				while (content.indexOf('&#39;') != -1) {
+					content = content.replace('&#39;', '\'');
+				}
+				while (content.indexOf('#39;') != -1) {
+					content = content.replace('#39;', '\'');
+				}
+				return content;
 			}
 		}]);
 
@@ -25397,7 +25499,7 @@
 			}
 		}, {
 			key: 'nextPage',
-			value: function nextPage(page) {
+			value: function nextPage(page, category) {
 				var instance = this;
 				Ajax.Get('/database/posts/' + page + '/5', function (data) {
 					console.log(JSON.parse(data));
@@ -25405,9 +25507,28 @@
 				});
 			}
 		}, {
+			key: 'nextCategoryPage',
+			value: function nextCategoryPage(category, start_id) {
+				var instance = this;
+				var start = start_id != null ? start_id : -1;
+				Ajax.Get('/database/posts-after/' + category + '/' + start, function (data) {
+					instance.actions.addToCategory({ posts: JSON.parse(data), category: category });
+				});
+			}
+		}, {
+			key: 'addToCategory',
+			value: function addToCategory(posts) {
+				this.dispatch(posts);
+			}
+		}, {
 			key: 'addPosts',
 			value: function addPosts(posts) {
 				this.dispatch(posts);
+			}
+		}, {
+			key: 'filterPosts',
+			value: function filterPosts(category) {
+				this.dispatch(category);
 			}
 		}]);
 
@@ -25482,7 +25603,7 @@
 			value: function render() {
 				return React.createElement(
 					'div',
-					{ className: 'post-container' },
+					{ className: 'post-container', id: this.props.post.id },
 					React.createElement(
 						'h2',
 						{ style: styles.PostTitle, className: 'post-title' },
