@@ -45,7 +45,7 @@ export default class AppController extends React.Component {
 	}
 	renderCover() {
 		return (
-			<img className='cover-image' src='/home.jpg'/>
+			<img className='cover-image'/>
 		);
 	}
 	showPosts() {

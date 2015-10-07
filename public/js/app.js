@@ -23654,7 +23654,7 @@
 		}, {
 			key: "renderCover",
 			value: function renderCover() {
-				return React.createElement("img", { className: "cover-image", src: "/home.jpg" });
+				return React.createElement("img", { className: "cover-image" });
 			}
 		}, {
 			key: "showPosts",

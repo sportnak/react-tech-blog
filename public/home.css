@@ -117,11 +117,6 @@ body {
 		left: 31%;
 	}
 
-	.cover-image {
-		height: 100%;
-		max-height: 100%;
-	}
-
 	#showPosts {
 		margin-top: -110%;
 	}
@@ -138,6 +133,31 @@ body {
 		margin-top: -50%;
 	}
 
+	@media (min-width: 500px) {
+		.cover-image {
+			content: url('/home-large.jpg');
+		}
+	}
+
+	@media (min-width: 300px) and (max-width: 500px) {
+		.cover-image {
+			content: url('/home-medium.jpg');
+		}
+	}
+
+	@media (orientation: landscape) {
+		.cover-image {
+			width: 100%;
+			max-width: 100%;	
+		}
+	}
+
+	@media (orientation: portrait) {
+		.cover-image {
+			height: 100%;
+			max-height: 100%;
+		}
+	}
 }
 
 @media (min-width: 1000px) {
@@ -176,5 +196,6 @@ body {
 
 	.cover-image {
 		max-width: 100%;
+		content: url('/home-large.jpg');
 	}
 }
