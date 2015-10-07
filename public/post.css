@@ -12,6 +12,11 @@
 	font-size: 15;
 }
 
+.post-content img {
+	height: auto !important;
+	max-width: 100% !important;
+}
+
 .new-post {
 	margin: 0 10%;
 }

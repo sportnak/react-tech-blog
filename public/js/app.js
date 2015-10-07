@@ -23614,12 +23614,15 @@
 				if (window.location.hash.length > 0) {
 					window.location.hash = '';
 				}
-				util.ConvertToArray(document.querySelectorAll('.tagline')).forEach(function (tag) {
-					tag.style.display = 'initial';
-				});
+				document.querySelector('.tagline1').style.display = 'initial';
+				document.querySelector('.tagline2').style.display = 'initial';
 
 				util.ConvertToArray(document.querySelector('.cover').children).forEach(function (child) {
-					child.style.display = 'initial';
+					if (child.classList.contains('nav-button')) {
+						child.style.display = 'inline-block';
+					} else {
+						child.style.display = 'initial';
+					}
 				});
 			}
 		}, {
@@ -23633,17 +23636,34 @@
 					React.createElement("link", { href: "/home.css", rel: "stylesheet", type: "text/css" }),
 					React.createElement(
 						"div",
-						{ className: "tagline", style: { position: 'absolute', left: offset, top: 250 + location * size, fontSize: size, color: 'white' } },
+						{ className: 'tagline' + location, style: { position: 'absolute', color: 'white' } },
 						text
 					)
 				);
+			}
+		}, {
+			key: "renderGrid",
+			value: function renderGrid() {
+				return React.createElement(
+					"div",
+					null,
+					React.createElement("div", { className: "testing-vertical" }),
+					React.createElement("div", { className: "testing-horizontal" })
+				);
+			}
+		}, {
+			key: "renderCover",
+			value: function renderCover() {
+				return React.createElement("img", { className: "cover-image", src: "/home.jpg" });
 			}
 		}, {
 			key: "showPosts",
 			value: function showPosts() {
 				document.querySelector('.cover').classList.add('cover-leave');
 				document.querySelector('#posts').style.display = 'initial';
+				document.querySelector('#app-container').style.overflowX = 'visible';
 				document.querySelector('body').style.overflow = 'visible';
+				document.querySelector('.cover-image').style.width = 0;
 			}
 		}, {
 			key: "render",
@@ -23653,15 +23673,15 @@
 					null,
 					React.createElement(
 						"div",
-						{ style: { width: '100%', maxWidth: '100%' } },
+						{ id: "app-container", style: { height: '100%', maxHeight: '100%', overflowX: 'hidden' } },
 						React.createElement(
 							"div",
 							{ className: "cover" },
-							React.createElement("img", { src: "/home.jpg", style: { maxWidth: '100%' } }),
+							this.renderCover(),
 							this.renderLine('Everything that is', 1),
 							this.renderLine('was coded to be as such.', 2),
 							React.createElement(
-								"div",
+								"li",
 								{ id: "showPosts", onClick: this.showPosts, className: "nav-button" },
 								React.createElement(
 									"a",
@@ -23670,7 +23690,7 @@
 								)
 							),
 							React.createElement(
-								"div",
+								"li",
 								{ id: "showResume", className: "nav-button" },
 								React.createElement(
 									"a",
@@ -23679,7 +23699,7 @@
 								)
 							),
 							React.createElement(
-								"div",
+								"li",
 								{ id: "showGallery", className: "nav-button" },
 								React.createElement(
 									"a",
@@ -23688,7 +23708,7 @@
 								)
 							),
 							React.createElement(
-								"div",
+								"li",
 								{ id: "showAdventure", onClick: this.showPosts, className: "nav-button" },
 								React.createElement(
 									"a",

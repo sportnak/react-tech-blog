@@ -60,26 +60,9 @@ body {
 	bottom: 0;
 }
 
-#showPosts {
-	margin: 33% calc(25% - 87px);
-}
-
-#showResume {
-	margin: 33% calc(42% - 87px);
-}
-
-#showGallery {
-	margin: 33% calc(59% - 87px);
-}
-
-#showAdventure {
-	margin: 33% calc(76% - 87px);
-}
-
 .nav-button{
 	font: 'Helvetica';
 	cursor: pointer;
-	font-size: 18px;
 	text-align: center;
 	color: white;
 	position: absolute;
@@ -89,8 +72,6 @@ body {
 	right: 0;
 	margin: auto;
 	z-index: 2;
-	width: 150px;
-	height: 45px;
 	border: 2px solid #337ab7;
 	border-radius: 2px;
 	-webkit-animation: floatUp 2.5s ease;
@@ -110,4 +91,90 @@ body {
 	display: inline-block;
 	text-decoration: none;
 	color: white;
+}
+
+@media (max-width: 1000px){
+	.nav-button {
+		background: #337ab7;
+		display: inline-block;
+		position: relative;
+		font-size: 12px;
+		width: 100%;
+		height: 40px;
+	}
+
+	.tagline1 {
+		position: absolute;
+		font-size: 24px;
+		top: 84px;
+		left: 25%;
+	}
+
+	.tagline2 {
+		position: absolute;
+		font-size: 24px;
+		top: 108px;
+		left: 31%;
+	}
+
+	.cover-image {
+		height: 100%;
+		max-height: 100%;
+	}
+
+	#showPosts {
+		margin-top: -110%;
+	}
+
+	#showResume {
+		margin-top: -90%;
+	}
+
+	#showGallery {
+		margin-top: -70%;
+	}
+
+	#showAdventure {
+		margin-top: -50%;
+	}
+
+}
+
+@media (min-width: 1000px) {
+	#showPosts {
+		margin: 33% calc(25% - 87px);
+	}
+
+	#showResume {
+		margin: 33% calc(42% - 87px);
+	}
+
+	#showGallery {
+		margin: 33% calc(59% - 87px);
+	}
+
+	#showAdventure {
+		margin: 33% calc(76% - 87px);
+	}
+	.nav-button {
+		font-size: 18px;
+		width: 150px;
+		height: 45px;
+	}
+
+	.tagline1 {
+		font-size: 48px;
+		top: 298px;
+		left: 36%;
+	}
+
+	.tagline2 {
+		font-size: 48px;
+		top: 346px;
+		left: 39%;
+	}
+
+	.cover-image {
+		max-width: 100%;
+	}
 }
