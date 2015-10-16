@@ -207,7 +207,7 @@ function ConnectToDb(connectionString, callback){
 		if (err){
 			error = err;
 		}
-		var client = err ? { status : 'ERROR', error : err } : { status : 'SUCCESS', client : client, fin: done };
+		var client = err ? { status : 'ERROR', error : error } : { status : 'SUCCESS', client : client, fin: done };
 		if(callback){
 			callback(client);
 			return;

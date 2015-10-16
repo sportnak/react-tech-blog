@@ -24,12 +24,6 @@ body {
 	to {opacity: 1;}
 }
 
-.tagline {
-	display: none;
-	-webkit-animation: floatUp 1.5s ease;
-	-webkit-animation-fill-mode: forwards;
-}
-
 @-webkit-keyframes floatUp{
 	0% { opacity: 0;}
 	33% {opacity: 0;}
@@ -93,74 +87,127 @@ body {
 	color: white;
 }
 
-@media (max-width: 1000px){
-	.nav-button {
-		background: #337ab7;
-		display: inline-block;
-		position: relative;
-		font-size: 12px;
-		width: 100%;
-		height: 40px;
-	}
-
-	.tagline1 {
-		position: absolute;
-		font-size: 24px;
-		top: 84px;
-		left: 25%;
-	}
-
-	.tagline2 {
-		position: absolute;
-		font-size: 24px;
-		top: 108px;
-		left: 31%;
-	}
-
-	#showPosts {
-		margin-top: -110%;
-	}
-
-	#showResume {
-		margin-top: -90%;
-	}
-
-	#showGallery {
-		margin-top: -70%;
-	}
-
-	#showAdventure {
-		margin-top: -50%;
-	}
+@media (max-width: 800px){
 
 	@media (min-width: 500px) {
-		.cover-image {
-			content: url('/home-large.jpg');
-		}
-	}
-
-	@media (min-width: 300px) and (max-width: 500px) {
 		.cover-image {
 			content: url('/home-medium.jpg');
 		}
 	}
 
+	@media (min-width: 300px) and (max-width: 500px) {
+		.cover-image {
+			content: url('/home-small.jpg');
+		}
+	}
+
 	@media (orientation: landscape) {
+		.tagline1 {
+			position: absolute;
+			font-size: 24px;
+			top: calc(35%);
+			left: 25%;
+			-webkit-animation: floatUp 1.5s ease;
+			-webkit-animation-fill-mode: forwards;
+		}
+
+		.tagline2 {
+			position: absolute;
+			font-size: 24px;
+			top: calc(35% + 24px);
+			left: 31%;
+			-webkit-animation: floatUp 1.5s ease;
+			-webkit-animation-fill-mode: forwards;
+		}
+
 		.cover-image {
 			width: 100%;
 			max-width: 100%;	
 		}
+
+		.nav-button {
+			background: #337ab7;
+			position: absolute;
+			font-size: 12px;
+			width: 100px;
+			height: 40px;
+		}
+
+		@media (max-width: 600px) {
+			.nav-button {
+				width: 80px;
+			}
+
+			.tagline1, .tagline2 {
+				font-size: 16px;
+			}
+		}
+
+		@media (max-width: 300px) {
+			.tagline1, .tagline2 {
+				font-size: 12px;
+			}
+		}
+
+		#showPosts {
+			margin: 33% calc(25% - 87px);
+		}
+
+		#showResume {
+			margin: 33% calc(42% - 87px);
+		}
+
+		#showGallery {
+			margin: 33% calc(59% - 87px);
+		}
+
+		#showAdventure {
+			margin: 33% calc(76% - 87px);
+		}
 	}
 
 	@media (orientation: portrait) {
+		.tagline1 {
+			display: none;
+		}
+
+		.tagline2 {
+			display: none;
+		}
+
 		.cover-image {
 			height: 100%;
 			max-height: 100%;
 		}
+
+		.nav-button {
+			background: #337ab7;
+			display: inline-block;
+			position: relative;
+			font-size: 12px;
+			width: 100%;
+			height: 40px;
+		}
+
+		#showPosts {
+			margin-top: -110%;
+		}
+
+		#showResume {
+			margin-top: -90%;
+		}
+
+		#showGallery {
+			margin-top: -70%;
+		}
+
+		#showAdventure {
+			margin-top: -50%;
+		}
 	}
 }
 
-@media (min-width: 1000px) {
+@media (min-width: 800px) {
 	#showPosts {
 		margin: 33% calc(25% - 87px);
 	}
@@ -184,14 +231,18 @@ body {
 
 	.tagline1 {
 		font-size: 48px;
-		top: 298px;
+		top: 25%;
 		left: 36%;
+		-webkit-animation: flyup 1.5s fast;
+		-webkit-animation-fill-mode: forwards;
 	}
 
 	.tagline2 {
 		font-size: 48px;
-		top: 346px;
+		top: calc(25% + 48px);
 		left: 39%;
+		-webkit-animation: flyup 1.5s fast;
+		-webkit-animation-fill-mode: forwards;
 	}
 
 	.cover-image {

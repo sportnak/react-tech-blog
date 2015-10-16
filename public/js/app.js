@@ -23633,7 +23633,6 @@
 				return React.createElement(
 					"div",
 					null,
-					React.createElement("link", { href: "/home.css", rel: "stylesheet", type: "text/css" }),
 					React.createElement(
 						"div",
 						{ className: 'tagline' + location, style: { position: 'absolute', color: 'white' } },
@@ -23673,7 +23672,8 @@
 					null,
 					React.createElement(
 						"div",
-						{ id: "app-container", style: { height: '100%', maxHeight: '100%', overflowX: 'hidden' } },
+						{ id: "app-container" },
+						React.createElement("link", { href: "/home.css", rel: "stylesheet", type: "text/css" }),
 						React.createElement(
 							"div",
 							{ className: "cover" },

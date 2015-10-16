@@ -28,7 +28,6 @@ export default class AppController extends React.Component {
 		var offset = leftOffset + '%';
 		return(
 			<div>
-				<link href='/home.css' rel='stylesheet' type='text/css'/>
 				<div className={'tagline' + location} style={{position: 'absolute', color: 'white'}}>
 					{text}
 				</div>
@@ -58,7 +57,8 @@ export default class AppController extends React.Component {
 	render() {
 		return(
 			<div>
-				<div id='app-container' style={{height: '100%', maxHeight: '100%', overflowX: 'hidden'}}>
+				<div id='app-container'>
+					<link href='/home.css' rel='stylesheet' type='text/css'/>
 					<div className='cover'>
 						{this.renderCover()}
 						{this.renderLine('Everything that is', 1)}
