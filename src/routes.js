@@ -1,16 +1,23 @@
-var { Router, Route } = require('react-router');
+var ReactRouter = require('react-router');
+var Route = ReactRouter.Route;
 var React = require('react');
+var IndexRoute = ReactRouter.IndexRoute;
 
 var AppController = require('./shared/components/AppController');
+var HomeController = require('./shared/components/HomeController');
 var PostController = require('./shared/components/Post/PostController');
+var PostContainer = require('./shared/components/Post/PostsContainer');
 var Login = require('./shared/components/Login/LoginController');
 //modify this one to be the errors file.
 var ServerErrorController = require('./shared/components/ServerErrorController');
 
 export default (
-	<Route handler={ AppController } path='/'> 
-		<Route name='/login' handler={ Login }/>
-		<Route name='/post' handler={ PostController }/>
-		<Route name='server_error' handler={ ServerErrorController }/>
+	<Route path='/' component={ AppController }> 
+    <IndexRoute component= { HomeController }/>
+		<Route path='tech' component={ PostContainer }/>
+    <Route path='adventure' component={PostContainer}/>
+		<Route path='login' component={ Login }/>
+		<Route path='post' component={ PostController }/>
+		<Route path='server_error' component={ ServerErrorController }/>
 	</Route>
 );

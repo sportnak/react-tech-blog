@@ -5,111 +5,63 @@ var PostItem = require('./PostItem');
 var styles = require('../../../../views/styles/PostStyle/PostContainerStyles');
 var util = require('../../util');
 
-//yikes
-var pageGlobal = 1;
-var hashGlobal = '';
-
-function checkBottom(){
-	var body = document.body,
-		html = document.documentElement;
-	var height = Math.max( body.scrollHeight, body.offsetHeight, 
-		html.clientHeight, html.scrollHeight, html.offsetHeight );
-	
-	if(window.scrollY + window.innerHeight == height) {
-		var hashtag = window.location.href.substring(window.location.origin.length + 2);
-		if(hashtag) {
-			if(hashtag === hashGlobal) {
-				var last = util.ConvertToArray(document.querySelector('.post-box').children[0].children).slice(-1)[0];
-				PostActions.nextCategoryPage(hashtag, last.children[0].id);
-			} else {
-				PostActions.nextCategoryPage(hashtag);
-			}
-		} else {
-			PostActions.nextPage(pageGlobal);
-		}
-	}
+function checkBottom(page){
+  var body = document.body,
+    html = document.documentElement;
+  var height = Math.max( body.scrollHeight, body.offsetHeight, 
+    html.clientHeight, html.scrollHeight, html.offsetHeight );
+  
+  if (window.scrollY + window.innerHeight == height) { 
+    var category = this.props.route.path.toLowerCase();
+    category = category[0].toUpperCase() + category.substring(1);
+    PostActions.nextCategoryPage(category, page);
+  }
 }
 
 var PostContainer = React.createClass({
-	getInitialState(){
-		return PostStore.getState();
-	},
-
-	componentDidMount(){
-		PostActions.loadPosts();
-		PostStore.listen(this.onChange);
-		window.addEventListener("hashchange", function() {
-			hashGlobal = window.location.href.substring(window.location.origin.length + 2);
-			PostActions.nextCategoryPage(window.location.href.substring(window.location.origin.length + 2));
-		});
-	},
-
-	componentWillUnmount(){
-		PostStore.unlisten(this.onChange);
-	},
-
-	onChange(state){
-		this.setState(state);
-		pageGlobal = this.state.page;
-		window.onscroll = checkBottom;
-	},
-
-	renderPost() {
-		return (
-			<div className='post-box'>
-				<ul style={styles.UlStyle}>
-					{this.state.posts.map((post) => {
-						return (
-							<li><PostItem post={post}/></li>
-						);
-					})}
-				</ul>
-			</div>
-		);
-	},
-
-	renderAdventure(){
-		return (
-			<div className='post-box'>
-				<ul style={styles.UlStyle}>
-					{this.state.adventurePosts.map((post) => {
-						return (
-							<li><PostItem post={post} category={this.state.category}/></li>
-						);
-					})}
-				</ul>
-			</div>
-		);
-	},
-
-	renderTech() {
-		return (
-			<div className='post-box'>
-				<ul style={styles.UlStyle}>
-					{this.state.techPosts.map((post) => {
-						return (
-							<li><PostItem post={post} category={this.state.category}/></li>
-						);
-					})}
-				</ul>
-			</div>
-		);
-	},
-	
-	render() {
-		if(this.state.posts && this.state.category === ''){
-			return(this.renderPost());
-		} else if (this.state.adventurePosts && this.state.category === 'Adventure') {
-			return(this.renderAdventure());
-		} else if (this.state.techPosts && this.state.category === 'Tech') {
-			return(this.renderTech());
-		} else {
-			return (
-				<div>No Posts Today</div>
-			);
-		}
-		
-	}
+  getInitialState(){
+    return PostStore.getState();
+  },
+  componentDidMount(){
+    var category = this.props.route.path.toLowerCase();
+    category = category[0].toUpperCase() + category.substring(1);
+    PostActions.loadPosts(category);
+    PostStore.listen(this.onChange);
+  },
+  componentWillUnmount(){
+    PostStore.unlisten(this.onChange);
+  },
+  onChange(state){
+    this.setState(state);
+    if (this.state.page !== -2) {
+      window.onscroll = checkBottom.bind(this, state.page);
+    } else {
+      window.onscroll = null;
+    }
+  },
+  renderPosts(){
+    return (
+      <div className='post-box'>
+        <ul style={styles.UlStyle}>
+          {this.state.posts.map((post) => {
+            return (
+              <li><PostItem post={post} category={this.state.category}/></li>
+            );
+          })}
+        </ul>
+      </div>
+    );
+  },
+  render() {
+    if (this.props.route.path.toLowerCase() === 'adventure' || this.props.route.path.toLowerCase() === 'tech') {
+      return (this.renderPosts());
+    } else {
+      return (
+        <div>{'You must be lost! \n Try a different category.'}</div>
+      );
+    }
+    
+  }
 });
 
 module.exports = PostContainer;

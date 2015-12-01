@@ -2,8 +2,6 @@ var React = require('react');
 var Router = require('react-router');
 var Ajax = require('../../AJAX');
 
-var RouteHandler = Router.RouteHandler;
-
 export default class PostController {
 	componentDidMount(){
 		CKEDITOR.replace('contentEditor');

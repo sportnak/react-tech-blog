@@ -1,8 +1,6 @@
 var React = require('react');
 var Router = require('react-router');
 
-var RouteHandler = Router.RouteHandler;
-
 export default class LoginConroller extends React.Component {  
 	render() {
 		return(
