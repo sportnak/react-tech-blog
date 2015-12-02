@@ -19,6 +19,15 @@ export default class AppController extends React.Component {
     return(
       <div>
         <div id='app-container'>
+          <link href='/home.css' rel='stylesheet' type='text/css'/>
+          <div className="nav-button-container">
+            <div className="nav-button-container-bar">
+              <li id='showPosts' className='nav-button' onclick="window.location.href = '/Tech'"><a href='/Tech'></a></li>
+              <li id='showResume' className='nav-button'><a href='#'></a></li>
+              <li id='showGallery' className='nav-button'><a href='#'></a></li>
+              <li id='showAdventure' className='nav-button' onclick="window.location.href = '/Adventure'"><a href='/Adventure'></a></li>
+            </div>
+          </div>
           { this.props.children }
         </div>
       </div>

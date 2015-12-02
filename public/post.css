@@ -18,11 +18,11 @@
 }
 
 .new-post {
-	margin: 0 10%;
+	margin: 10%;
 }
 
 #cke_contentEditor {
-	width: 60%;
+	width: 90%;
 }
 
 label {

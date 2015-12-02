@@ -25258,6 +25258,35 @@
 	        React.createElement(
 	          "div",
 	          { id: "app-container" },
+	          React.createElement("link", { href: "/home.css", rel: "stylesheet", type: "text/css" }),
+	          React.createElement(
+	            "div",
+	            { className: "nav-button-container" },
+	            React.createElement(
+	              "div",
+	              { className: "nav-button-container-bar" },
+	              React.createElement(
+	                "li",
+	                { id: "showPosts", className: "nav-button", onclick: "window.location.href = '/Tech'" },
+	                React.createElement("a", { href: "/Tech" })
+	              ),
+	              React.createElement(
+	                "li",
+	                { id: "showResume", className: "nav-button" },
+	                React.createElement("a", { href: "#" })
+	              ),
+	              React.createElement(
+	                "li",
+	                { id: "showGallery", className: "nav-button" },
+	                React.createElement("a", { href: "#" })
+	              ),
+	              React.createElement(
+	                "li",
+	                { id: "showAdventure", className: "nav-button", onclick: "window.location.href = '/Adventure'" },
+	                React.createElement("a", { href: "/Adventure" })
+	              )
+	            )
+	          ),
 	          this.props.children
 	        )
 	      );
@@ -27276,31 +27305,16 @@
 	          React.createElement(
 	            'div',
 	            { className: 'tagline' },
-	            'The world is a book,\n \t and those who don\'t travel only read the first page.'
-	          )
-	        ),
-	        React.createElement(
-	          'div',
-	          { className: 'nav-button-container' },
-	          React.createElement(
-	            'li',
-	            { id: 'showPosts', className: 'nav-button' },
-	            React.createElement('a', { href: '/Tech' })
-	          ),
-	          React.createElement(
-	            'li',
-	            { id: 'showResume', className: 'nav-button' },
-	            React.createElement('a', { href: '#' })
-	          ),
-	          React.createElement(
-	            'li',
-	            { id: 'showGallery', className: 'nav-button' },
-	            React.createElement('a', { href: '#' })
-	          ),
-	          React.createElement(
-	            'li',
-	            { id: 'showAdventure', className: 'nav-button' },
-	            React.createElement('a', { href: '/Adventure' })
+	            React.createElement(
+	              'span',
+	              null,
+	              'The world is a book,\n \t and those who don\'t travel only read the first page.'
+	            ),
+	            React.createElement(
+	              'span',
+	              { className: 'tagline-author' },
+	              '\n- St. Augustine'
+	            )
 	          )
 	        )
 	      );
@@ -27311,7 +27325,6 @@
 	      return React.createElement(
 	        'div',
 	        null,
-	        React.createElement('link', { href: '/home.css', rel: 'stylesheet', type: 'text/css' }),
 	        this.props.path === '/' ? this.renderCover() : this.renderCover()
 	      );
 	    }
@@ -27330,7 +27343,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-		value: true
+	  value: true
 	});
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -27342,112 +27355,84 @@
 	var Ajax = __webpack_require__(226);
 
 	var PostController = (function () {
-		function PostController() {
-			_classCallCheck(this, PostController);
-		}
+	  function PostController() {
+	    _classCallCheck(this, PostController);
+	  }
 
-		_createClass(PostController, [{
-			key: 'componentDidMount',
-			value: function componentDidMount() {
-				CKEDITOR.replace('contentEditor');
-				this.props.editor = CKEDITOR;
-			}
-		}, {
-			key: 'submitButton',
-			value: function submitButton() {
-				Ajax.Post('/database/post', JSON.stringify({
-					title: this.refs.postTitle.state.value,
-					type: this.refs.postType.state.value,
-					content: this.props.editor.instances.contentEditor.getData()
-				}), function (data) {
-					if (data.status == 200) {
-						window.href.location('/');
-					}
-				});
-			}
-		}, {
-			key: 'titleChange',
-			value: function titleChange(event) {
-				this.setState({ value: event.target.value });
-			}
-		}, {
-			key: 'typeChange',
-			value: function typeChange(event) {
-				this.setState({ value: event.target.value });
-			}
-		}, {
-			key: 'render',
-			value: function render() {
-				return React.createElement(
-					'div',
-					null,
-					React.createElement(
-						'h1',
-						{ style: { fontWeight: 400, fontSize: 36 } },
-						'Write a post:'
-					),
-					React.createElement(
-						'div',
-						{ className: 'new-post' },
-						React.createElement(
-							'table',
-							null,
-							React.createElement(
-								'tr',
-								null,
-								React.createElement(
-									'td',
-									null,
-									React.createElement(
-										'label',
-										{ 'for': 'Title' },
-										'Title: '
-									)
-								),
-								React.createElement(
-									'td',
-									null,
-									React.createElement('input', { onChange: this.titleChange, ref: 'postTitle', name: 'Title', placeholder: 'Title', type: 'text' })
-								)
-							),
-							React.createElement(
-								'tr',
-								null,
-								React.createElement(
-									'td',
-									null,
-									React.createElement(
-										'label',
-										{ 'for': 'Type' },
-										'Type: '
-									)
-								),
-								React.createElement(
-									'td',
-									null,
-									React.createElement('input', { onChange: this.typeChange, ref: 'postType', name: 'Type', placeholder: 'Adventure or Tech', type: 'text' })
-								)
-							)
-						),
-						React.createElement('br', null),
-						React.createElement(
-							'label',
-							{ 'for': 'Content' },
-							'Content: '
-						),
-						React.createElement('textarea', { id: 'contentEditor', name: 'Content', type: 'text' }),
-						React.createElement('br', null),
-						React.createElement(
-							'button',
-							{ onClick: this.submitButton.bind(this) },
-							'Submit'
-						)
-					)
-				);
-			}
-		}]);
+	  _createClass(PostController, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      CKEDITOR.replace('contentEditor');
+	      this.props.editor = CKEDITOR;
+	    }
+	  }, {
+	    key: 'submitButton',
+	    value: function submitButton() {
+	      Ajax.Post('/database/post', JSON.stringify({
+	        title: this.refs.postTitle.state.value,
+	        type: this.refs.postType.state.value,
+	        content: this.props.editor.instances.contentEditor.getData()
+	      }), function (data) {
+	        if (data.status == 200) {
+	          window.href.location('/');
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'titleChange',
+	    value: function titleChange(event) {
+	      this.setState({ value: event.target.value });
+	    }
+	  }, {
+	    key: 'typeChange',
+	    value: function typeChange(event) {
+	      this.setState({ value: event.target.value });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'h1',
+	          { style: { margin: '10%', fontWeight: 400, fontSize: 36 } },
+	          'Write a post:'
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'new-post' },
+	          React.createElement(
+	            'label',
+	            { 'for': 'Title' },
+	            'Title: '
+	          ),
+	          React.createElement('input', { onChange: this.titleChange, ref: 'postTitle', name: 'Title', placeholder: 'Title', type: 'text' }),
+	          React.createElement(
+	            'label',
+	            { 'for': 'Type' },
+	            'Type: '
+	          ),
+	          React.createElement('input', { onChange: this.typeChange, ref: 'postType', name: 'Type', placeholder: 'Adventure or Tech', type: 'text' }),
+	          React.createElement('br', null),
+	          React.createElement(
+	            'label',
+	            { 'for': 'Content' },
+	            'Content: '
+	          ),
+	          React.createElement('textarea', { id: 'contentEditor', name: 'Content', type: 'text' }),
+	          React.createElement('br', null),
+	          React.createElement(
+	            'button',
+	            { onClick: this.submitButton.bind(this) },
+	            'Submit'
+	          )
+	        )
+	      );
+	    }
+	  }]);
 
-		return PostController;
+	  return PostController;
 	})();
 
 	exports['default'] = PostController;

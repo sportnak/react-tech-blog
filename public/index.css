@@ -1,3 +1,8 @@
 .post-content {
-	font-family: 'Fjord One', arial, serif;
+	font-family: Volkorn, arial, serif;
+}
+
+@font-face {
+	font-family: Volkorn;
+	src: url('/fonts/Volkorn-Regular.tff');
 }

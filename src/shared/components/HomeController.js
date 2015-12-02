@@ -17,13 +17,10 @@ export default class HomeController extends React.Component {
       <div className='cover'>
         <img className='cover-image'/>
         <div className="tagline-wrapper">
-          <div className="tagline">{'The world is a book,\n \t and those who don\'t travel only read the first page.'}</div>
-        </div>
-        <div className="nav-button-container">
-          <li id='showPosts' className='nav-button'><a href='/Tech'></a></li>
-          <li id='showResume' className='nav-button'><a href='#'></a></li>
-          <li id='showGallery' className='nav-button'><a href='#'></a></li>
-          <li id='showAdventure' className='nav-button'><a href='/Adventure'></a></li>
+          <div className="tagline">
+            <span>{'The world is a book,\n \t and those who don\'t travel only read the first page.'}</span>
+            <span className="tagline-author">{'\n- St. Augustine'}</span>
+          </div>
         </div>
       </div>
     );
@@ -31,7 +28,6 @@ export default class HomeController extends React.Component {
   render() {
     return (
       <div>
-        <link href='/home.css' rel='stylesheet' type='text/css'/>
         { this.props.path === '/' ? this.renderCover() : this.renderCover() }
       </div>
     );
