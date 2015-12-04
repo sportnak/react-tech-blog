@@ -23,9 +23,13 @@ var PostContainer = React.createClass({
     return PostStore.getState();
   },
   componentDidMount(){
-    var category = this.props.route.path.toLowerCase();
-    category = category[0].toUpperCase() + category.substring(1);
-    PostActions.loadPosts(category);
+    if (this.props.route.path !== 'post/:id') {
+      var category = this.props.route.path.toLowerCase();
+      category = category[0].toUpperCase() + category.substring(1);
+      PostActions.loadPosts(category);
+    } else {
+      PostActions.loadPost(this.props.params.id);
+    }
     PostStore.listen(this.onChange);
   },
   componentWillUnmount(){
@@ -45,7 +49,7 @@ var PostContainer = React.createClass({
         <ul style={styles.UlStyle}>
           {this.state.posts.map((post) => {
             return (
-              <li><PostItem post={post} category={this.state.category}/></li>
+              <li><PostItem post={post} category={this.props.route.path}/></li>
             );
           })}
         </ul>
@@ -53,11 +57,11 @@ var PostContainer = React.createClass({
     );
   },
   render() {
-    if (this.props.route.path.toLowerCase() === 'adventure' || this.props.route.path.toLowerCase() === 'tech') {
+    if (this.props.route.path.toLowerCase() === 'adventure' || this.props.route.path.toLowerCase() === 'tech' || this.props.route.path === 'post/:id') {
       return (this.renderPosts());
     } else {
       return (
-        <div>{'You must be lost! \n Try a different category.'}</div>
+        <div style={{position: 'absolute', top: 0, bottom: 0, right: 0, left: 0, margin: 'auto'}}>{'You must be lost! \n Try a different category.'}</div>
       );
     }
     

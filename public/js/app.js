@@ -51,7 +51,7 @@
 	var Router = ReactRouter.Router;
 	var Route = ReactRouter.Route;
 	var routes = __webpack_require__(207);
-	var createBrowserHistory = __webpack_require__(234);
+	var createBrowserHistory = __webpack_require__(235);
 
 	// -v x.13.x
 	/**Router.run(routes, Router.HistoryLocation, function (Handler, state) {
@@ -25187,19 +25187,22 @@
 	var AppController = __webpack_require__(208);
 	var HomeController = __webpack_require__(230);
 	var PostController = __webpack_require__(231);
+	var GalleryController = __webpack_require__(232);
 	var PostContainer = __webpack_require__(210);
-	var Login = __webpack_require__(232);
+	var Login = __webpack_require__(233);
 	//modify this one to be the errors file.
-	var ServerErrorController = __webpack_require__(233);
+	var ServerErrorController = __webpack_require__(234);
 
 	exports['default'] = React.createElement(
 		Route,
 		{ path: '/', component: AppController },
 		React.createElement(IndexRoute, { component: HomeController }),
 		React.createElement(Route, { path: 'tech', component: PostContainer }),
+		React.createElement(Route, { path: 'post/:id', component: PostContainer }),
 		React.createElement(Route, { path: 'adventure', component: PostContainer }),
 		React.createElement(Route, { path: 'login', component: Login }),
 		React.createElement(Route, { path: 'post', component: PostController }),
+		React.createElement(Route, { path: 'gallery', component: GalleryController }),
 		React.createElement(Route, { path: 'server_error', component: ServerErrorController })
 	);
 	module.exports = exports['default'];
@@ -25257,8 +25260,8 @@
 	        null,
 	        React.createElement(
 	          "div",
-	          { id: "app-container" },
-	          React.createElement("link", { href: "/home.css", rel: "stylesheet", type: "text/css" }),
+	          { id: "app-container", style: { overflow: 'hidden' } },
+	          React.createElement("link", { href: "/css/home.css", rel: "stylesheet", type: "text/css" }),
 	          React.createElement(
 	            "div",
 	            { className: "nav-button-container" },
@@ -25345,9 +25348,13 @@
 	    return PostStore.getState();
 	  },
 	  componentDidMount: function componentDidMount() {
-	    var category = this.props.route.path.toLowerCase();
-	    category = category[0].toUpperCase() + category.substring(1);
-	    PostActions.loadPosts(category);
+	    if (this.props.route.path !== 'post/:id') {
+	      var category = this.props.route.path.toLowerCase();
+	      category = category[0].toUpperCase() + category.substring(1);
+	      PostActions.loadPosts(category);
+	    } else {
+	      PostActions.loadPost(this.props.params.id);
+	    }
 	    PostStore.listen(this.onChange);
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
@@ -25374,19 +25381,19 @@
 	          return React.createElement(
 	            'li',
 	            null,
-	            React.createElement(PostItem, { post: post, category: _this.state.category })
+	            React.createElement(PostItem, { post: post, category: _this.props.route.path })
 	          );
 	        })
 	      )
 	    );
 	  },
 	  render: function render() {
-	    if (this.props.route.path.toLowerCase() === 'adventure' || this.props.route.path.toLowerCase() === 'tech') {
+	    if (this.props.route.path.toLowerCase() === 'adventure' || this.props.route.path.toLowerCase() === 'tech' || this.props.route.path === 'post/:id') {
 	      return this.renderPosts();
 	    } else {
 	      return React.createElement(
 	        'div',
-	        null,
+	        { style: { position: 'absolute', top: 0, bottom: 0, right: 0, left: 0, margin: 'auto' } },
 	        'You must be lost! \n Try a different category.'
 	      );
 	    }
@@ -25440,17 +25447,29 @@
 	    key: 'handleUpdatePosts',
 	    value: function handleUpdatePosts(posts) {
 	      var instance = this;
-	      posts.posts.forEach(function (post) {
-	        post.content = instance.decodeMarks(post);
-	      });
 
-	      for (var i = 0; i < 5; i++) {
-	        this.posts.push(posts.posts[i]);
+	      if (!posts.posts) {
+	        this.posts = [];
 	      }
-	      for (i = 5; i < posts.length; i++) {
-	        this.nextPage.push(posts.posts[i]);
+
+	      if (posts.category) {
+	        posts.posts.forEach(function (post) {
+	          post.content = instance.decodeMarks(post);
+	        });
+
+	        for (var i = 0; i < 5; i++) {
+	          this.posts.push(posts.posts[i]);
+	        }
+
+	        for (i = 5; i < posts.posts.length; i++) {
+	          this.nextPage.push(posts.posts[i]);
+	        }
+
+	        this.page = posts.posts[posts.posts.length - 1].id;
+	      } else {
+	        posts.post.content = instance.decodeMarks(posts.post);
+	        this.posts.push(posts.post);
 	      }
-	      this.page = posts.posts[posts.posts.length - 1].id;
 	    }
 	  }, {
 	    key: 'handleNextPage',
@@ -25468,9 +25487,19 @@
 	      while (content.indexOf('&#39;') != -1) {
 	        content = content.replace('&#39;', '\'');
 	      }
+
 	      while (content.indexOf('#39;') != -1) {
 	        content = content.replace('#39;', '\'');
 	      }
+
+	      while (content.indexOf('&nbsp;') != -1) {
+	        content = content.replace('&nbsp;', ' ');
+	      }
+
+	      while (content.indexOf('nbsp;') != -1) {
+	        content = content.replace('nbsp;', ' ');
+	      }
+
 	      return content;
 	    }
 	  }]);
@@ -27090,11 +27119,19 @@
 	  }
 
 	  _createClass(PostAction, [{
+	    key: 'loadPost',
+	    value: function loadPost(id) {
+	      var instance = this;
+	      Ajax.Get('/database/post/' + id, function (data) {
+	        console.log(JSON.parse(data));
+	        instance.actions.updatePosts({ post: JSON.parse(data) });
+	      });
+	    }
+	  }, {
 	    key: 'loadPosts',
 	    value: function loadPosts(category) {
 	      var instance = this;
 	      Ajax.Get('/database/posts-after/' + category + '/-1', function (data) {
-	        console.log(JSON.parse(data));
 	        instance.actions.updatePosts({ posts: JSON.parse(data), category: category, page: 1 });
 	      });
 	    }
@@ -27162,7 +27199,7 @@
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
-		value: true
+	  value: true
 	});
 
 	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -27177,48 +27214,80 @@
 	var styles = __webpack_require__(228);
 
 	var _default = (function (_React$Component) {
-		_inherits(_default, _React$Component);
+	  _inherits(_default, _React$Component);
 
-		function _default() {
-			_classCallCheck(this, _default);
+	  function _default() {
+	    _classCallCheck(this, _default);
 
-			_get(Object.getPrototypeOf(_default.prototype), 'constructor', this).apply(this, arguments);
-		}
+	    _get(Object.getPrototypeOf(_default.prototype), 'constructor', this).apply(this, arguments);
+	  }
 
-		_createClass(_default, [{
-			key: 'render',
-			value: function render() {
-				return React.createElement(
-					'div',
-					{ className: 'post-container', id: this.props.post.id },
-					React.createElement(
-						'h2',
-						{ style: styles.PostTitle, className: 'post-title' },
-						this.props.post.title
-					),
-					React.createElement('div', { className: 'post-content', dangerouslySetInnerHTML: { __html: this.props.post.content } }),
-					React.createElement(
-						'div',
-						{ className: 'post-details' },
-						React.createElement(
-							'span',
-							null,
-							this.props.post.author
-						),
-						React.createElement('br', null),
-						React.createElement(
-							'span',
-							null,
-							this.props.post.date_created
-						)
-					),
-					React.createElement('br', null),
-					React.createElement('hr', null)
-				);
-			}
-		}]);
+	  _createClass(_default, [{
+	    key: 'openPost',
+	    value: function openPost(id) {
+	      window.location.href = '/post/' + id;
+	    }
+	  }, {
+	    key: 'renderPreviews',
+	    value: function renderPreviews() {
+	      var content = this.props.post.content;
+	      content = content.substring(content.indexOf('<p>'), content.indexOf('</p>'));
 
-		return _default;
+	      return React.createElement(
+	        'div',
+	        { onClick: this.openPost.bind(this, this.props.post.id), className: 'post-preview-container', id: this.props.post.id },
+	        React.createElement(
+	          'h2',
+	          { className: 'post-preview-title', style: styles.PostTitle },
+	          this.props.post.title
+	        ),
+	        React.createElement('div', { className: 'post-preview-content', dangerouslySetInnerHTML: { __html: content } }),
+	        React.createElement('br', null)
+	      );
+	    }
+	  }, {
+	    key: 'renderPost',
+	    value: function renderPost() {
+	      return React.createElement(
+	        'div',
+	        { className: 'post-container', id: this.props.post.id },
+	        React.createElement(
+	          'h2',
+	          { style: styles.PostTitle, className: 'post-title' },
+	          this.props.post.title
+	        ),
+	        React.createElement('div', { className: 'post-content', dangerouslySetInnerHTML: { __html: this.props.post.content } }),
+	        React.createElement(
+	          'div',
+	          { className: 'post-details' },
+	          React.createElement(
+	            'span',
+	            null,
+	            this.props.post.author
+	          ),
+	          React.createElement('br', null),
+	          React.createElement(
+	            'span',
+	            null,
+	            this.props.post.date_created
+	          )
+	        ),
+	        React.createElement('br', null),
+	        React.createElement('hr', null)
+	      );
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return React.createElement(
+	        'div',
+	        null,
+	        this.props.category === 'post/:id' ? this.renderPost() : this.renderPreviews()
+	      );
+	    }
+	  }]);
+
+	  return _default;
 	})(React.Component);
 
 	exports['default'] = _default;
@@ -27230,7 +27299,7 @@
 
 	module.exports = {
 		PostTitle : {
-			fontFamily: 'Vollkorn',
+			fontFamily: 'Ubuntu-Italic',
 			fontSize: 36,
 			fontWeight: 400
 		},
@@ -27283,7 +27352,6 @@
 	  _createClass(HomeController, [{
 	    key: 'componentDidMount',
 	    value: function componentDidMount() {
-	      console.log(this.props.children);
 	      util.ConvertToArray(document.querySelector('.cover').children).forEach(function (child) {
 	        if (child.classList.contains('nav-button')) {
 	          child.style.display = 'inline-block';
@@ -27442,6 +27510,59 @@
 /* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var React = __webpack_require__(1);
+	var Router = __webpack_require__(157);
+
+	var size = 48;
+	var titleSize = 36;
+
+	//require('!less-loader!../../../../public/css/gallery.less');
+
+	var GalleryController = (function (_React$Component) {
+	  _inherits(GalleryController, _React$Component);
+
+	  function GalleryController() {
+	    _classCallCheck(this, GalleryController);
+
+	    _get(Object.getPrototypeOf(GalleryController.prototype), "constructor", this).apply(this, arguments);
+	  }
+
+	  _createClass(GalleryController, [{
+	    key: "render",
+	    value: function render() {
+	      return React.createElement(
+	        "div",
+	        null,
+	        React.createElement("link", { href: "/css/gallery.css", rel: "stylesheet", type: "text/css" }),
+	        React.createElement("div", { className: "gallery-container" })
+	      );
+	    }
+	  }]);
+
+	  return GalleryController;
+	})(React.Component);
+
+	exports["default"] = GalleryController;
+	module.exports = exports["default"];
+
+/***/ },
+/* 233 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	Object.defineProperty(exports, '__esModule', {
@@ -27517,7 +27638,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 233 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27563,7 +27684,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 234 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

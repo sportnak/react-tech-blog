@@ -18,8 +18,8 @@ export default class AppController extends React.Component {
   render() {
     return(
       <div>
-        <div id='app-container'>
-          <link href='/home.css' rel='stylesheet' type='text/css'/>
+        <div id='app-container' style={{ overflow: 'hidden' }}>
+          <link href='/css/home.css' rel='stylesheet' type='text/css'/>
           <div className="nav-button-container">
             <div className="nav-button-container-bar">
               <li id='showPosts' className='nav-button' onclick="window.location.href = '/Tech'"><a href='/Tech'></a></li>

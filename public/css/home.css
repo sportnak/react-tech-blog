@@ -8,8 +8,43 @@
   src: url('/fonts/Ubuntu-Light.ttf');
 }
 
-body {
+@font-face {
+  font-family: 'Ubuntu-Italic';
+  src: url('/fonts/Ubuntu-MediumItalic.ttf');
+}
+
+.post-content {
+  font-family: 'Volkorn';
+}
+
+.post-container {
+  font-family: 'Ubuntu', arial, serif;
+}
+
+.post-preview-container {
+  border: 1px solid #dfdfdf;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 20px;
+  padding: 10px;
+}
+
+.post-preview-title {
   overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post-preview-content {
+  height: 70px;
+  overflow: hidden;
+}
+
+strong {
+  font-family: 'Ubuntu-Italic';
+}
+
+em {
+  font-weight: 700;
 }
 
 .cover-leave {
@@ -148,7 +183,7 @@ body {
 }
 
 .post-box {
-  margin: 55px 0 0;
+  margin: 100px 0 0;
 }
 
 
@@ -198,6 +233,10 @@ body {
   .tagline {
     font-size: 24px;
     text-align: center;
+  }
+
+  .nav-button-container {
+    height: 100%;
   }
 
   .nav-button-container-bar {
@@ -303,6 +342,10 @@ body {
 @media (min-width: 1300px) {
   .tagline {
     font-size: 64px;
+  }
+
+  .tagline-author {
+    bottom: -100px;
   }
 
   .cover-image {

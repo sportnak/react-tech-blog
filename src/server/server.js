@@ -92,14 +92,34 @@ app.post('/login', passport.authenticate('local', {
   res.redirect('/post');
 });
 
-app.post('/database/post', isLoggedIn, function(req, res){
-  if(req.isAuthenticated()){
+app.get('/database/post/:id', function (req, res) {
+  ConnectToDb(connectionString, function (connection){
+    if(connection.status == 'SUCCESS'){
+      var rows = [];
+      var result = [];
+      connection.client
+      .query('SELECT * FROM post WHERE id = ' + req.params.id + ';')
+      .on('row', function(row){
+        rows.push(row);
+      })
+      .on('end', function(result){
+        res.send(rows[0]);
+        connection.fin();
+      });
+      connection.fin();
+    } else {
+      res.status(500).send();
+    }
+  });
+});
+
+app.post('/database/post', function (req, res){
     var json = '';
     for(var key in req.body){
       json = json + '' + key;
     }
     json = JSON.parse(json);
-    ConnectToDb(connectionString, function(connection){
+    ConnectToDb(connectionString, function (connection){
       if(connection.status == 'SUCCESS'){
         var result = [];
         connection.client
@@ -116,9 +136,6 @@ app.post('/database/post', isLoggedIn, function(req, res){
         res.redirect('/');
       }
     });
-  } else {
-    res.redirect(404, '/');
-  }
 });
 
 app.get('/database/posts-after/:category/:start_id', function (req, res) {
@@ -126,8 +143,8 @@ app.get('/database/posts-after/:category/:start_id', function (req, res) {
     res.status(400).send();
   } else { 
     var id = req.params.start_id === '-1' ? '' : 'id < ' + req.params.start_id + ' AND ';
-    ConnectToDb(connectionString, function(connection){
-      if(connection.status == 'SUCCESS'){
+    ConnectToDb (connectionString, function (connection){
+      if (connection.status == 'SUCCESS') {
         var rows = [];
         connection.client
         .query('SELECT * FROM post WHERE ' + id + ' category = \'' + req.params.category + '\' ORDER BY id DESC;')
@@ -157,15 +174,15 @@ app.get('/database/posts/:page/:limit', function (req, res){
   } else {
     limit = req.params.limit;
   }
-  ConnectToDb(connectionString, function(connection){
-    if(connection.status == 'SUCCESS'){
+  ConnectToDb(connectionString, function (connection) {
+    if (connection.status == 'SUCCESS') {
       var rows = [];
       connection.client
       .query('SELECT * FROM post WHERE id > ((SELECT MAX(id) FROM post) - ' + (req.params.page) * 5 + ') AND id <= ((SELECT MAX(id) FROM post) - ' + (req.params.page - 1) * (req.params.page == 2 ? 0 : 5) + ');')
-      .on('row', function(row){
+      .on('row', function (row) {
         rows.push(row);
       })
-      .on('end', function(result){
+      .on('end', function (result) {
         res.send(rows);
         connection.fin();
       });
@@ -177,13 +194,13 @@ app.get('/database/posts/:page/:limit', function (req, res){
 });
 
 app.get('/*', function (req, res) {
-  if(req.path.indexOf('.css') != -1){
+  if (req.path.indexOf('.css') != -1) {
     res.header('content-type', 'text/css');
   }
-  if(req.path.indexOf('/database') == -1){
+  if (req.path.indexOf('/database') == -1) {
     res.render('index');
   } 
-  else if(req.path.indexOf('/database') == 0){
+  else if (req.path.indexOf('/database') == 0) {
     console.log('API request was made')
   } 
   else {
@@ -226,7 +243,7 @@ function DbConnectionFail (res){
   }
 }
 
-function isLoggedIn(req, res, next){
+function isLoggedIn (req, res, next) {
   if (req.path.indexOf('/post') == 0){
     if (req.isAuthenticated()){
       return next();

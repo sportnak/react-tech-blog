@@ -1,6 +1,6 @@
 module.exports = {
 	PostTitle : {
-		fontFamily: 'Vollkorn',
+		fontFamily: 'Ubuntu',
 		fontSize: 36,
 		fontWeight: 400
 	},

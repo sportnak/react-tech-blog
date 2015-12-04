@@ -3,7 +3,6 @@ var util = require('../util');
 
 export default class HomeController extends React.Component {
   componentDidMount() { 
-    console.log(this.props.children)
     util.ConvertToArray(document.querySelector('.cover').children).forEach(function(child){
       if(child.classList.contains('nav-button')) {
         child.style.display = 'inline-block';
