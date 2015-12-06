@@ -5,12 +5,14 @@ var IndexRoute = ReactRouter.IndexRoute;
 
 var AppController = require('./shared/components/AppController');
 var HomeController = require('./shared/components/HomeController');
-var PostController = require('./shared/components/Post/PostController');
-var GalleryController = require('./shared/components/Gallery/GalleryController');
-var PostContainer = require('./shared/components/Post/PostsContainer');
 var Login = require('./shared/components/Login/LoginController');
-//modify this one to be the errors file.
+var PostController = require('./shared/components/Post/PostController');
+var PostContainer = require('./shared/components/Post/PostsContainer');
 var ServerErrorController = require('./shared/components/ServerErrorController');
+
+var PhotoController = require('./shared/components/Photos/PhotoController');
+var AddPhotoController = require('./shared/components/Photos/AddPhotoController');
+var GalleryController = require('./shared/components/Photos/GalleryController');
 
 export default (
 	<Route path='/' component={ AppController }> 
@@ -20,7 +22,12 @@ export default (
     	<Route path='adventure' component={ PostContainer }/>
 		<Route path='login' component={ Login }/>
 		<Route path='post' component={ PostController }/>
-		<Route path='gallery' component={ GalleryController }/>
+		<Route path='photos' component={ PhotoController }>
+			<Route path='add' component={ AddPhotoController }/>
+			<Route path='gallery' component={ GalleryController }>
+				<Route path=':id'/>
+			</Route>
+		</Route>
 		<Route path='server_error' component={ ServerErrorController }/>
 	</Route>
 );

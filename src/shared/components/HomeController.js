@@ -14,11 +14,11 @@ export default class HomeController extends React.Component {
   renderCover() {
     return (
       <div className='cover'>
-        <img className='cover-image'/>
-        <div className="tagline-wrapper">
-          <div className="tagline">
+        <img className='cover__image'/>
+        <div className="tagline__wrapper">
+          <div className="tagline__wrapper__text">
             <span>{'The world is a book,\n \t and those who don\'t travel only read the first page.'}</span>
-            <span className="tagline-author">{'\n- St. Augustine'}</span>
+            <span className="tagline__wrapper__author">{'\n- St. Augustine'}</span>
           </div>
         </div>
       </div>

@@ -51,7 +51,7 @@
 	var Router = ReactRouter.Router;
 	var Route = ReactRouter.Route;
 	var routes = __webpack_require__(207);
-	var createBrowserHistory = __webpack_require__(235);
+	var createBrowserHistory = __webpack_require__(239);
 
 	// -v x.13.x
 	/**Router.run(routes, Router.HistoryLocation, function (Handler, state) {
@@ -22218,8 +22218,6 @@
 	 * This source code is licensed under the BSD-style license found in the
 	 * LICENSE file in the root directory of this source tree. An additional grant
 	 * of patent rights can be found in the PATENTS file in the same directory.
-	 *
-	 * @providesModule invariant
 	 */
 
 	'use strict';
@@ -22253,9 +22251,9 @@
 	      var args = [a, b, c, d, e, f];
 	      var argIndex = 0;
 	      error = new Error(
-	        'Invariant Violation: ' +
 	        format.replace(/%s/g, function() { return args[argIndex++]; })
 	      );
+	      error.name = 'Invariant Violation';
 	    }
 
 	    error.framesToPop = 1; // we don't care about invariant's own frame
@@ -25186,12 +25184,14 @@
 
 	var AppController = __webpack_require__(208);
 	var HomeController = __webpack_require__(230);
-	var PostController = __webpack_require__(231);
-	var GalleryController = __webpack_require__(232);
+	var Login = __webpack_require__(231);
+	var PostController = __webpack_require__(232);
 	var PostContainer = __webpack_require__(210);
-	var Login = __webpack_require__(233);
-	//modify this one to be the errors file.
-	var ServerErrorController = __webpack_require__(234);
+	var ServerErrorController = __webpack_require__(233);
+
+	var PhotoController = __webpack_require__(234);
+	var AddPhotoController = __webpack_require__(235);
+	var GalleryController = __webpack_require__(236);
 
 	exports['default'] = React.createElement(
 		Route,
@@ -25202,7 +25202,16 @@
 		React.createElement(Route, { path: 'adventure', component: PostContainer }),
 		React.createElement(Route, { path: 'login', component: Login }),
 		React.createElement(Route, { path: 'post', component: PostController }),
-		React.createElement(Route, { path: 'gallery', component: GalleryController }),
+		React.createElement(
+			Route,
+			{ path: 'photos', component: PhotoController },
+			React.createElement(Route, { path: 'add', component: AddPhotoController }),
+			React.createElement(
+				Route,
+				{ path: 'gallery', component: GalleryController },
+				React.createElement(Route, { path: ':id' })
+			)
+		),
 		React.createElement(Route, { path: 'server_error', component: ServerErrorController })
 	);
 	module.exports = exports['default'];
@@ -25258,16 +25267,22 @@
 	      return React.createElement(
 	        "div",
 	        null,
+	        React.createElement("link", { href: "/css/post.css", rel: "stylesheet", type: "text/css" }),
+	        React.createElement("link", { href: "/css/bundle.css", rel: "stylesheet", type: "text/css" }),
 	        React.createElement(
 	          "div",
-	          { id: "app-container", style: { overflow: 'hidden' } },
-	          React.createElement("link", { href: "/css/home.css", rel: "stylesheet", type: "text/css" }),
+	          { id: "app-container" },
 	          React.createElement(
 	            "div",
 	            { className: "nav-button-container" },
 	            React.createElement(
 	              "div",
-	              { className: "nav-button-container-bar" },
+	              { className: "nav-button-container__bar" },
+	              React.createElement(
+	                "li",
+	                { id: "home", className: "nav-button", onclick: "window.location.href = \"/\"" },
+	                React.createElement("a", { href: "/" })
+	              ),
 	              React.createElement(
 	                "li",
 	                { id: "showPosts", className: "nav-button", onclick: "window.location.href = '/Tech'" },
@@ -26382,6 +26397,7 @@
 	    boundListeners: [],
 	    lifecycleEvents: {},
 	    actionListeners: {},
+	    actionListenerHandlers: {},
 	    publicMethods: {},
 	    handlesOwnErrors: false
 	  }, extras);
@@ -26953,7 +26969,13 @@
 	    // You can pass in the constant or the function itself
 	    var key = symbol.id ? symbol.id : symbol;
 	    this.actionListeners[key] = this.actionListeners[key] || [];
-	    this.actionListeners[key].push(handler.bind(this));
+	    this.actionListenerHandlers[key] = this.actionListenerHandlers[key] || [];
+
+	    if (this.actionListenerHandlers[key].indexOf(handler) === -1) {
+	      this.actionListenerHandlers[key].push(handler);
+	      this.actionListeners[key].push(handler.bind(this));
+	    }
+
 	    this.boundListeners.push(key);
 	  },
 
@@ -27235,13 +27257,13 @@
 
 	      return React.createElement(
 	        'div',
-	        { onClick: this.openPost.bind(this, this.props.post.id), className: 'post-preview-container', id: this.props.post.id },
+	        { onClick: this.openPost.bind(this, this.props.post.id), className: 'post-preview__container', id: this.props.post.id },
 	        React.createElement(
 	          'h2',
-	          { className: 'post-preview-title', style: styles.PostTitle },
+	          { className: 'post-preview__container__title', style: styles.PostTitle },
 	          this.props.post.title
 	        ),
-	        React.createElement('div', { className: 'post-preview-content', dangerouslySetInnerHTML: { __html: content } }),
+	        React.createElement('div', { className: 'post-preview__container__content', dangerouslySetInnerHTML: { __html: content } }),
 	        React.createElement('br', null)
 	      );
 	    }
@@ -27250,16 +27272,16 @@
 	    value: function renderPost() {
 	      return React.createElement(
 	        'div',
-	        { className: 'post-container', id: this.props.post.id },
+	        { className: 'post__container', id: this.props.post.id },
 	        React.createElement(
 	          'h2',
-	          { style: styles.PostTitle, className: 'post-title' },
+	          { style: styles.PostTitle, className: 'post__container__title' },
 	          this.props.post.title
 	        ),
-	        React.createElement('div', { className: 'post-content', dangerouslySetInnerHTML: { __html: this.props.post.content } }),
+	        React.createElement('div', { className: 'post__container__content', dangerouslySetInnerHTML: { __html: this.props.post.content } }),
 	        React.createElement(
 	          'div',
-	          { className: 'post-details' },
+	          { className: 'post__container__details' },
 	          React.createElement(
 	            'span',
 	            null,
@@ -27299,8 +27321,8 @@
 
 	module.exports = {
 		PostTitle : {
-			fontFamily: 'Ubuntu-Italic',
-			fontSize: 36,
+			fontFamily: 'Ubuntu',
+			fontSize: 40,
 			fontWeight: 400
 		},
 		H1 : {
@@ -27366,13 +27388,13 @@
 	      return React.createElement(
 	        'div',
 	        { className: 'cover' },
-	        React.createElement('img', { className: 'cover-image' }),
+	        React.createElement('img', { className: 'cover__image' }),
 	        React.createElement(
 	          'div',
-	          { className: 'tagline-wrapper' },
+	          { className: 'tagline__wrapper' },
 	          React.createElement(
 	            'div',
-	            { className: 'tagline' },
+	            { className: 'tagline__wrapper__text' },
 	            React.createElement(
 	              'span',
 	              null,
@@ -27380,7 +27402,7 @@
 	            ),
 	            React.createElement(
 	              'span',
-	              { className: 'tagline-author' },
+	              { className: 'tagline__wrapper__author' },
 	              '\n- St. Augustine'
 	            )
 	          )
@@ -27406,6 +27428,83 @@
 
 /***/ },
 /* 231 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, '__esModule', {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var React = __webpack_require__(1);
+	var Router = __webpack_require__(157);
+
+	var LoginConroller = (function (_React$Component) {
+	  _inherits(LoginConroller, _React$Component);
+
+	  function LoginConroller() {
+	    _classCallCheck(this, LoginConroller);
+
+	    _get(Object.getPrototypeOf(LoginConroller.prototype), 'constructor', this).apply(this, arguments);
+	  }
+
+	  _createClass(LoginConroller, [{
+	    key: 'render',
+	    value: function render() {
+	      return React.createElement(
+	        'div',
+	        null,
+	        React.createElement(
+	          'form',
+	          { className: 'login-form', action: '/login', method: 'post' },
+	          React.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            React.createElement(
+	              'label',
+	              { 'for': 'email' },
+	              'Email: '
+	            ),
+	            React.createElement('input', { placeholder: 'Email', name: 'username' }),
+	            React.createElement('br', null)
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            React.createElement(
+	              'label',
+	              { 'for': 'password' },
+	              'Password: '
+	            ),
+	            React.createElement('input', { placeholder: 'Password', name: 'password', type: 'password' }),
+	            React.createElement('br', null)
+	          ),
+	          React.createElement(
+	            'button',
+	            { id: 'login-submit', type: 'submit' },
+	            'Submit'
+	          )
+	        )
+	      );
+	    }
+	  }]);
+
+	  return LoginConroller;
+	})(React.Component);
+
+	exports['default'] = LoginConroller;
+	module.exports = exports['default'];
+
+/***/ },
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27507,138 +27606,7 @@
 	module.exports = exports['default'];
 
 /***/ },
-/* 232 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var React = __webpack_require__(1);
-	var Router = __webpack_require__(157);
-
-	var size = 48;
-	var titleSize = 36;
-
-	//require('!less-loader!../../../../public/css/gallery.less');
-
-	var GalleryController = (function (_React$Component) {
-	  _inherits(GalleryController, _React$Component);
-
-	  function GalleryController() {
-	    _classCallCheck(this, GalleryController);
-
-	    _get(Object.getPrototypeOf(GalleryController.prototype), "constructor", this).apply(this, arguments);
-	  }
-
-	  _createClass(GalleryController, [{
-	    key: "render",
-	    value: function render() {
-	      return React.createElement(
-	        "div",
-	        null,
-	        React.createElement("link", { href: "/css/gallery.css", rel: "stylesheet", type: "text/css" }),
-	        React.createElement("div", { className: "gallery-container" })
-	      );
-	    }
-	  }]);
-
-	  return GalleryController;
-	})(React.Component);
-
-	exports["default"] = GalleryController;
-	module.exports = exports["default"];
-
-/***/ },
 /* 233 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, '__esModule', {
-		value: true
-	});
-
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var React = __webpack_require__(1);
-	var Router = __webpack_require__(157);
-
-	var LoginConroller = (function (_React$Component) {
-		_inherits(LoginConroller, _React$Component);
-
-		function LoginConroller() {
-			_classCallCheck(this, LoginConroller);
-
-			_get(Object.getPrototypeOf(LoginConroller.prototype), 'constructor', this).apply(this, arguments);
-		}
-
-		_createClass(LoginConroller, [{
-			key: 'render',
-			value: function render() {
-				return React.createElement(
-					'div',
-					null,
-					React.createElement(
-						'form',
-						{ className: 'login-form', action: '/login', method: 'post' },
-						React.createElement(
-							'div',
-							{ className: 'form-group' },
-							React.createElement(
-								'label',
-								{ 'for': 'email' },
-								'Email: '
-							),
-							React.createElement('input', { placeholder: 'Email', name: 'username' }),
-							React.createElement('br', null)
-						),
-						React.createElement(
-							'div',
-							{ className: 'form-group' },
-							React.createElement(
-								'label',
-								{ 'for': 'password' },
-								'Password: '
-							),
-							React.createElement('input', { placeholder: 'Password', name: 'password', type: 'password' }),
-							React.createElement('br', null)
-						),
-						React.createElement(
-							'button',
-							{ id: 'login-submit', type: 'submit' },
-							'Submit'
-						)
-					),
-					React.createElement('script', { src: 'http://localhost:8081/src/client/login/login.js' })
-				);
-			}
-		}]);
-
-		return LoginConroller;
-	})(React.Component);
-
-	exports['default'] = LoginConroller;
-	module.exports = exports['default'];
-
-/***/ },
-/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -27684,7 +27652,300 @@
 	module.exports = exports['default'];
 
 /***/ },
+/* 234 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var React = __webpack_require__(1);
+	var Router = __webpack_require__(157);
+
+	var GalleryController = (function (_React$Component) {
+	  _inherits(GalleryController, _React$Component);
+
+	  function GalleryController() {
+	    _classCallCheck(this, GalleryController);
+
+	    _get(Object.getPrototypeOf(GalleryController.prototype), "constructor", this).apply(this, arguments);
+	  }
+
+	  _createClass(GalleryController, [{
+	    key: "render",
+	    value: function render() {
+	      return React.createElement(
+	        "div",
+	        null,
+	        React.createElement(
+	          "div",
+	          { className: "photo__container" },
+	          this.props.children
+	        )
+	      );
+	    }
+	  }]);
+
+	  return GalleryController;
+	})(React.Component);
+
+	exports["default"] = GalleryController;
+	module.exports = exports["default"];
+
+/***/ },
 /* 235 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var React = __webpack_require__(1);
+	var Router = __webpack_require__(157);
+
+	var AddPhotoController = (function (_React$Component) {
+	  _inherits(AddPhotoController, _React$Component);
+
+	  function AddPhotoController() {
+	    _classCallCheck(this, AddPhotoController);
+
+	    _get(Object.getPrototypeOf(AddPhotoController.prototype), "constructor", this).apply(this, arguments);
+	  }
+
+	  _createClass(AddPhotoController, [{
+	    key: "render",
+	    value: function render() {
+	      return React.createElement(
+	        "form",
+	        { className: "add-photo-form", action: "/add/photo", method: "post" },
+	        React.createElement(
+	          "label",
+	          { "for": "name" },
+	          'Name: '
+	        ),
+	        React.createElement("input", { placeholder: "Name", name: "name" }),
+	        React.createElement(
+	          "label",
+	          { "for": "link" },
+	          'Link: '
+	        ),
+	        React.createElement("input", { placeholder: "Link", name: "link", type: "url" }),
+	        React.createElement(
+	          "button",
+	          { className: "add-photo-form__submit-button", type: "submit" },
+	          "Submit"
+	        )
+	      );
+	    }
+	  }]);
+
+	  return AddPhotoController;
+	})(React.Component);
+
+	exports["default"] = AddPhotoController;
+	module.exports = exports["default"];
+
+/***/ },
+/* 236 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(1);
+	var GalleryStore = __webpack_require__(237);
+	var GalleryActions = __webpack_require__(238);
+	var util = __webpack_require__(209);
+
+	var GalleryController = React.createClass({
+	  displayName: 'GalleryController',
+
+	  getInitialState: function getInitialState() {
+	    return GalleryStore.getState();
+	  },
+	  componentDidMount: function componentDidMount() {
+	    var page = this.props.params.id ? this.props.params.id : this.state.page;
+	    GalleryActions.loadPhotos(page);
+	    GalleryStore.listen(this.onChange);
+	  },
+	  componentWillUnmount: function componentWillUnmount() {
+	    GalleryStore.unlisten(this.onChange);
+	  },
+	  onChange: function onChange(state) {
+	    this.setState(state);
+	  },
+	  prevPage: function prevPage() {
+	    var page = this.state.page - 1;
+	    window.location.pathname = '/photos/gallery/' + page;
+	    //GalleryActions.loadPhotos(page);
+	  },
+	  nextPage: function nextPage() {
+	    var page = this.state.page == 0 ? 2 : parseInt(this.state.page) + 1;
+	    window.location.pathname = '/photos/gallery/' + page;
+	    //GalleryActions.loadPhotos(page);
+	  },
+	  closeLightbox: function closeLightbox() {
+	    document.body.style.overflow = 'scroll';
+	    this.setState({
+	      link: null
+	    });
+	  },
+	  openLightbox: function openLightbox(link, name) {
+	    document.body.style.overflow = 'hidden';
+
+	    this.setState({
+	      link: link,
+	      name: name,
+	      top: window.scrollY - 45
+	    });
+	  },
+	  renderLightBox: function renderLightBox() {
+	    return React.createElement(
+	      'div',
+	      { className: 'lightbox', onClick: this.closeLightbox, style: { top: this.state.top } },
+	      React.createElement(
+	        'div',
+	        { className: 'lightbox__photo' },
+	        React.createElement('div', { className: 'lightbox__photo__image', style: { background: 'url(' + this.state.link + ')', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundSize: 'contain' } }),
+	        React.createElement(
+	          'span',
+	          null,
+	          this.state.name
+	        )
+	      )
+	    );
+	  },
+	  render: function render() {
+	    var self = this;
+	    return React.createElement(
+	      'div',
+	      { className: 'photo-gallery__container' },
+	      this.state.page == 0 ? null : React.createElement('div', { className: 'photo-gallery__container__photos--before', onClick: this.prevPage }),
+	      React.createElement(
+	        'div',
+	        { className: 'photo-gallery__container__photos' },
+	        this.state.photos.map(function (photo) {
+	          return React.createElement('img', { className: 'photo', onClick: self.openLightbox.bind(self, photo.link, photo.name), src: photo.thumbnail });
+	        })
+	      ),
+	      this.state.photos.length == 0 || this.state.photos.length < 12 ? null : React.createElement('div', { className: 'photo-gallery__container__photos--after', onClick: this.nextPage }),
+	      self.state.link ? self.renderLightBox() : null
+	    );
+	  }
+	});
+
+	module.exports = GalleryController;
+
+/***/ },
+/* 237 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var alt = __webpack_require__(212);
+	var Actions = __webpack_require__(238);
+
+	var GalleryStore = (function () {
+	  function GalleryStore() {
+	    _classCallCheck(this, GalleryStore);
+
+	    this.nextPage = [];
+	    this.page = 0;
+	    this.photos = [];
+	    this.thumbnails = [];
+
+	    this.bindListeners({
+	      handleUpdatePhotos: Actions.UPDATE_PHOTOS
+	    });
+	  }
+
+	  _createClass(GalleryStore, [{
+	    key: 'handleUpdatePhotos',
+	    value: function handleUpdatePhotos(response) {
+	      if (response.page < this.page) {
+	        this.nextPage = response.photos.slice(12);
+	        this.photos = response.photos.slice(0, 12);
+	      } else {
+	        if (this.nextPage.length == 0) {
+	          this.photos = response.photos.slice(0, response.photos.length > 12 ? 12 : response.photos.length);
+	          this.nextPage = response.photos.slice(12);
+	        } else {
+	          this.photos = this.nextPage;
+	          this.nextPage = response.photos.slice(0, response.photos.length > 12 ? 12 : response.photos.length);
+	        }
+	      }
+	      this.page = response.page;
+	    }
+	  }]);
+
+	  return GalleryStore;
+	})();
+
+	module.exports = alt.createStore(GalleryStore, 'GalleryStore');
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+	var alt = __webpack_require__(212);
+	var Ajax = __webpack_require__(226);
+
+	var GalleryActions = (function () {
+	  function GalleryActions() {
+	    _classCallCheck(this, GalleryActions);
+	  }
+
+	  _createClass(GalleryActions, [{
+	    key: 'loadPhotos',
+	    value: function loadPhotos(page) {
+	      var instance = this;
+	      Ajax.Get('/page/photos/' + page, function (data) {
+	        instance.actions.updatePhotos({ photos: JSON.parse(data), page: page });
+	      });
+	    }
+	  }, {
+	    key: 'updatePhotos',
+	    value: function updatePhotos(posts) {
+	      this.dispatch(posts);
+	    }
+	  }]);
+
+	  return GalleryActions;
+	})();
+
+	module.exports = alt.createActions(GalleryActions);
+
+/***/ },
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

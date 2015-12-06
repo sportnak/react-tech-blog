@@ -1,7 +1,7 @@
 module.exports = {
 	PostTitle : {
 		fontFamily: 'Ubuntu',
-		fontSize: 36,
+		fontSize: 40,
 		fontWeight: 400
 	},
 	H1 : {
