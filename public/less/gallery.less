@@ -6,7 +6,7 @@
 
     .photo {
       display: inline-block;
-      margin: 8px;
+      margin: 8px 8px 8px 0;
       position: relative;
 
       &:hover {
@@ -22,36 +22,72 @@
     .photo-gallery {
       &__container {
         bottom: 0;
+        height: 100%;
         left: 0;
         margin: auto;
         padding: 0;
         position: absolute;
         right: 0;
         text-align: center;
-        top: 45px;
+        top: 90px;
         width: 100%;
 
         &__photos {
           padding: 0 45px;
 
-          &--before {
-            background: green;
+          &--before, &--after {
+            background: rgba(143, 143, 143, .4);
             cursor: pointer;
+            font-family: 'Icomoon';
             height: 100%;
-            left: 0;
             position: absolute;
             top: 8px;
-            width: 45px;
+            width: 50px;
+            z-index: 2;
+
+            &:hover {
+              -webkit-box-shadow: 0px 2px 14px 1px rgba(0,0,0,0.51);
+              -moz-box-shadow: 0px 2px 14px 1px rgba(0,0,0,0.51);
+              box-shadow: 0px 2px 14px 1px rgba(0,0,0,0.51);
+            }
+          }
+
+          &--before {
+            left: 0;
+
+            .before-icon {
+              bottom: 0;
+              height: 40px;
+              left: 5px;
+              margin: auto;
+              position: absolute;
+              top: 0;
+
+              &:before {
+                color: @grey;
+                content: '\e913';
+                font-size: 45px;
+              }
+            }
           }
 
           &--after {
-            background: green;
-            cursor: pointer;
-            height: 100%;
-            position: absolute;
             right: 0;
-            top: 8px;
-            width: 45px;
+
+            .after-icon {
+              bottom: 0;
+              height: 40px;
+              margin: auto;
+              position: absolute;
+              right: 5px;
+              top: 0;
+
+              &:before {
+                color: @grey;
+                content: '\e912';
+                font-size: 45px;
+              }
+            }
           }
         }
       }
@@ -60,7 +96,7 @@
     .lightbox {
       background: rgba(143, 143, 143, .8);
       cursor: pointer;
-      height: 110%;
+      height: 100%;
       position: absolute;
       width: 100%;
 
@@ -81,7 +117,8 @@
           margin: auto;
           position: absolute;
           right: 0;
-          width: 200px;
+          width: 300px;
+          z-index: 4;
         }
 
         &__image {
@@ -90,6 +127,43 @@
           position: absolute;
           top: 0;
           width: 100%;
+          z-index: 3;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 450px) {
+  .photo__container .photo-gallery__container {
+    top: 100px;
+
+    &__photos { 
+      padding: 0;
+
+      &--after {
+        width: 32px;
+
+        .after-icon {
+          right: 0;
+          width: 30px;
+
+          &:before {
+            font-size: 28px;
+          }
+        }
+      }
+
+      &--before {
+        width: 32px;
+
+        .before-icon {
+          left: 0;
+          width: 30px;
+
+          &:before {
+            font-size: 28px;
+          }
         }
       }
     }

@@ -25,7 +25,7 @@ var GalleryController = React.createClass({
     //GalleryActions.loadPhotos(page);
   },
   nextPage() {
-    var page = this.state.page == 0 ? 2 : parseInt(this.state.page) + 1;
+    var page = this.state.page == 0 ? 1 : parseInt(this.state.page) + 1;
     window.location.pathname = '/photos/gallery/' + page;
     //GalleryActions.loadPhotos(page);
   },
@@ -35,21 +35,42 @@ var GalleryController = React.createClass({
       link: null
     });
   },
-  openLightbox(link, name) {
+  openLightbox(link, name, album) {
     document.body.style.overflow = 'hidden';
 
     this.setState({
+      album: album,
       link: link,
       name: name,
       top: window.scrollY - 45
     });
+  },
+  renderBefore() {
+    if (this.state.page != 0) {
+      return (
+        <div className="photo-gallery__container__photos--before" onClick={this.prevPage}>
+          <div className="before-icon"/>
+        </div>
+      );
+    }
+    return;
+  },
+  renderAfter() {
+    if (this.state.photos.length == 0 || this.state.photos.length < 12) {
+      return;
+    }
+    return (
+      <div className="photo-gallery__container__photos--after" onClick={this.nextPage}>
+        <div className="after-icon"/>
+      </div>
+    );
   },
   renderLightBox() {
     return (
       <div className="lightbox" onClick={this.closeLightbox} style={{top: this.state.top}}>
         <div className="lightbox__photo">
           <div className="lightbox__photo__image" style={{background: 'url(' + this.state.link + ')', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', backgroundSize: 'contain'}}/>
-          <span>{this.state.name}</span>
+          <span>{this.state.name + ' - ' + this.state.album }</span>
         </div>
       </div>
     );
@@ -58,15 +79,15 @@ var GalleryController = React.createClass({
     var self = this;
     return (
       <div className="photo-gallery__container">
-        {this.state.page == 0 ? null : <div className="photo-gallery__container__photos--before" onClick={this.prevPage}/> }
+        {this.renderBefore()}
         <div className="photo-gallery__container__photos">
           {this.state.photos.map(function (photo) {
             return (
-              <img className="photo" onClick={self.openLightbox.bind(self, photo.link, photo.name)}  src={photo.thumbnail} />
+              <img className="photo" onClick={self.openLightbox.bind(self, photo.link, photo.name, photo.album)}  src={photo.thumbnail} />
             );
           })}
         </div>
-        {(this.state.photos.length == 0 || this.state.photos.length < 12) ? null : <div className="photo-gallery__container__photos--after" onClick={this.nextPage}/>}
+        {this.renderAfter()}
         {self.state.link ? self.renderLightBox() : null}
       </div>
     );

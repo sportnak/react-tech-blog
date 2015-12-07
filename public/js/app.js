@@ -25296,7 +25296,7 @@
 	              React.createElement(
 	                "li",
 	                { id: "showGallery", className: "nav-button" },
-	                React.createElement("a", { href: "#" })
+	                React.createElement("a", { href: "/photos/gallery" })
 	              ),
 	              React.createElement(
 	                "li",
@@ -27809,14 +27809,35 @@
 	      link: null
 	    });
 	  },
-	  openLightbox: function openLightbox(link, name) {
+	  openLightbox: function openLightbox(link, name, album) {
 	    document.body.style.overflow = 'hidden';
 
 	    this.setState({
+	      album: album,
 	      link: link,
 	      name: name,
 	      top: window.scrollY - 45
 	    });
+	  },
+	  renderBefore: function renderBefore() {
+	    if (this.state.page != 0) {
+	      return React.createElement(
+	        'div',
+	        { className: 'photo-gallery__container__photos--before', onClick: this.prevPage },
+	        React.createElement('div', { className: 'before-icon' })
+	      );
+	    }
+	    return;
+	  },
+	  renderAfter: function renderAfter() {
+	    if (this.state.photos.length == 0 || this.state.photos.length < 12) {
+	      return;
+	    }
+	    return React.createElement(
+	      'div',
+	      { className: 'photo-gallery__container__photos--after', onClick: this.nextPage },
+	      React.createElement('div', { className: 'after-icon' })
+	    );
 	  },
 	  renderLightBox: function renderLightBox() {
 	    return React.createElement(
@@ -27829,7 +27850,7 @@
 	        React.createElement(
 	          'span',
 	          null,
-	          this.state.name
+	          this.state.name + ' - ' + this.state.album
 	        )
 	      )
 	    );
@@ -27839,15 +27860,15 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'photo-gallery__container' },
-	      this.state.page == 0 ? null : React.createElement('div', { className: 'photo-gallery__container__photos--before', onClick: this.prevPage }),
+	      this.renderBefore(),
 	      React.createElement(
 	        'div',
 	        { className: 'photo-gallery__container__photos' },
 	        this.state.photos.map(function (photo) {
-	          return React.createElement('img', { className: 'photo', onClick: self.openLightbox.bind(self, photo.link, photo.name), src: photo.thumbnail });
+	          return React.createElement('img', { className: 'photo', onClick: self.openLightbox.bind(self, photo.link, photo.name, photo.album), src: photo.thumbnail });
 	        })
 	      ),
-	      this.state.photos.length == 0 || this.state.photos.length < 12 ? null : React.createElement('div', { className: 'photo-gallery__container__photos--after', onClick: this.nextPage }),
+	      this.renderAfter(),
 	      self.state.link ? self.renderLightBox() : null
 	    );
 	  }

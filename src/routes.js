@@ -25,7 +25,9 @@ export default (
 		<Route path='photos' component={ PhotoController }>
 			<Route path='add' component={ AddPhotoController }/>
 			<Route path='gallery' component={ GalleryController }>
-				<Route path=':id'/>
+				<Route path=":album">
+					<Route path=':id'/>
+				</Route>
 			</Route>
 		</Route>
 		<Route path='server_error' component={ ServerErrorController }/>

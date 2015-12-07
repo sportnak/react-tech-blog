@@ -26,7 +26,7 @@ export default class AppController extends React.Component {
               <li id='home' className='nav-button' onclick='window.location.href = "/"'><a href='/'></a></li>
               <li id='showPosts' className='nav-button' onclick="window.location.href = '/Tech'"><a href='/Tech'></a></li>
               <li id='showResume' className='nav-button'><a href='#'></a></li>
-              <li id='showGallery' className='nav-button'><a href='#'></a></li>
+              <li id='showGallery' className='nav-button'><a href='/photos/gallery'></a></li>
               <li id='showAdventure' className='nav-button' onclick="window.location.href = '/Adventure'"><a href='/Adventure'></a></li>
             </div>
           </div>
