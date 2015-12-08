@@ -34,7 +34,7 @@ var GalleryController = React.createClass({
   nextPage() {
     var album = this.state.activeAlbum ? this.state.activeAlbum : this.props.params.album;
     var page = this.state.page == 0 ? 1 : parseInt(this.state.page) + 1;
-    window.history.pushState(null, 'Title', '/photos/gallery/' + album + page);
+    window.history.pushState(null, 'Title', '/photos/gallery/' + album + '/' + page);
     GalleryActions.loadPhotos(page, album);
   },
   closeLightbox() {
