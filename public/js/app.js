@@ -25209,7 +25209,11 @@
 			React.createElement(
 				Route,
 				{ path: 'gallery', component: GalleryController },
-				React.createElement(Route, { path: ':id' })
+				React.createElement(
+					Route,
+					{ path: ':album' },
+					React.createElement(Route, { path: ':id' })
+				)
 			)
 		),
 		React.createElement(Route, { path: 'server_error', component: ServerErrorController })
@@ -27672,16 +27676,21 @@
 	var React = __webpack_require__(1);
 	var Router = __webpack_require__(157);
 
-	var GalleryController = (function (_React$Component) {
-	  _inherits(GalleryController, _React$Component);
+	var PhotoController = (function (_React$Component) {
+	  _inherits(PhotoController, _React$Component);
 
-	  function GalleryController() {
-	    _classCallCheck(this, GalleryController);
+	  function PhotoController() {
+	    _classCallCheck(this, PhotoController);
 
-	    _get(Object.getPrototypeOf(GalleryController.prototype), "constructor", this).apply(this, arguments);
+	    _get(Object.getPrototypeOf(PhotoController.prototype), "constructor", this).apply(this, arguments);
 	  }
 
-	  _createClass(GalleryController, [{
+	  _createClass(PhotoController, [{
+	    key: "renderGalleryOptions",
+	    value: function renderGalleryOptions() {
+	      return React.createElement("div", { className: "gallery-options__container" });
+	    }
+	  }, {
 	    key: "render",
 	    value: function render() {
 	      return React.createElement(
@@ -27690,16 +27699,16 @@
 	        React.createElement(
 	          "div",
 	          { className: "photo__container" },
-	          this.props.children
+	          this.props.children ? this.props.children : this.renderGalleryOptions()
 	        )
 	      );
 	    }
 	  }]);
 
-	  return GalleryController;
+	  return PhotoController;
 	})(React.Component);
 
-	exports["default"] = GalleryController;
+	exports["default"] = PhotoController;
 	module.exports = exports["default"];
 
 /***/ },
@@ -27783,8 +27792,14 @@
 	    return GalleryStore.getState();
 	  },
 	  componentDidMount: function componentDidMount() {
-	    var page = this.props.params.id ? this.props.params.id : this.state.page;
-	    GalleryActions.loadPhotos(page);
+	    if (this.props.params.album || this.state.activeAlbum) {
+	      var album = this.state.activeAlbum ? this.state.activeAlbum : this.props.params.album;
+	      var page = this.props.params.id ? this.props.params.id : this.state.page;
+	      GalleryActions.loadPhotos(page, album);
+	    } else {
+	      var page = this.state.page;
+	      GalleryActions.loadAlbums(page);
+	    }
 	    GalleryStore.listen(this.onChange);
 	  },
 	  componentWillUnmount: function componentWillUnmount() {
@@ -27794,14 +27809,16 @@
 	    this.setState(state);
 	  },
 	  prevPage: function prevPage() {
+	    var album = this.state.activeAlbum ? this.state.activeAlbum : this.props.params.album;
 	    var page = this.state.page - 1;
-	    window.location.pathname = '/photos/gallery/' + page;
-	    //GalleryActions.loadPhotos(page);
+	    window.history.back();
+	    GalleryActions.loadPhotos(page, album);
 	  },
 	  nextPage: function nextPage() {
-	    var page = this.state.page == 0 ? 2 : parseInt(this.state.page) + 1;
-	    window.location.pathname = '/photos/gallery/' + page;
-	    //GalleryActions.loadPhotos(page);
+	    var album = this.state.activeAlbum ? this.state.activeAlbum : this.props.params.album;
+	    var page = this.state.page == 0 ? 1 : parseInt(this.state.page) + 1;
+	    window.history.pushState(null, 'Title', '/photos/gallery/' + album + page);
+	    GalleryActions.loadPhotos(page, album);
 	  },
 	  closeLightbox: function closeLightbox() {
 	    document.body.style.overflow = 'scroll';
@@ -27819,15 +27836,58 @@
 	      top: window.scrollY - 45
 	    });
 	  },
+	  redirectWindow: function redirectWindow(path, name) {
+	    window.history.pushState(null, 'Title', '/photos/gallery/' + path);
+	    this.setState({
+	      activeAlbum: name
+	    });
+	    GalleryActions.loadPhotos(0, name);
+	  },
+	  hoverAlbum: function hoverAlbum(id) {
+	    this.setState({
+	      hoveredAlbum: id
+	    });
+	  },
+	  unhoverAlbum: function unhoverAlbum() {
+	    this.setState({
+	      hoveredAlbum: -1
+	    });
+	  },
 	  renderBefore: function renderBefore() {
 	    if (this.state.page != 0) {
 	      return React.createElement(
 	        'div',
-	        { className: 'photo-gallery__container__photos--before', onClick: this.prevPage },
+	        { className: 'photo-gallery__container__photos--before', onClick: this.prevPage.bind(self) },
 	        React.createElement('div', { className: 'before-icon' })
 	      );
 	    }
 	    return;
+	  },
+	  renderAlbums: function renderAlbums() {
+	    var self = this;
+
+	    return React.createElement(
+	      'div',
+	      { className: 'album-container' },
+	      self.state.albums.map(function (album) {
+	        return React.createElement(
+	          'div',
+	          { className: 'album-container__album', onMouseLeave: self.unhoverAlbum, onMouseEnter: self.hoverAlbum.bind(self, album.id), onClick: self.redirectWindow.bind(self, album.name + '/0', album.name), style: { background: 'url(' + album.link + ')', backgroundPositionY: '40%', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' } },
+	          self.state.hoveredAlbum >= 0 && self.state.hoveredAlbum == album.id ? self.renderCover(album.name) : null
+	        );
+	      })
+	    );
+	  },
+	  renderCover: function renderCover(name) {
+	    return React.createElement(
+	      'div',
+	      { className: 'album-container__album__cover' },
+	      React.createElement(
+	        'span',
+	        { className: 'album-container__album__cover__text' },
+	        name
+	      )
+	    );
 	  },
 	  renderAfter: function renderAfter() {
 	    if (this.state.photos.length == 0 || this.state.photos.length < 12) {
@@ -27855,21 +27915,25 @@
 	      )
 	    );
 	  },
+	  renderPhotos: function renderPhotos() {
+	    var self = this;
+	    return React.createElement(
+	      'div',
+	      { className: 'photo-gallery__container__photos' },
+	      self.state.photos.map(function (photo) {
+	        return React.createElement('img', { className: 'photo', key: photo.id, onClick: self.openLightbox.bind(self, photo.link, photo.name, photo.album), src: photo.thumbnail });
+	      })
+	    );
+	  },
 	  render: function render() {
 	    var self = this;
 	    return React.createElement(
 	      'div',
 	      { className: 'photo-gallery__container' },
 	      this.renderBefore(),
-	      React.createElement(
-	        'div',
-	        { className: 'photo-gallery__container__photos' },
-	        this.state.photos.map(function (photo) {
-	          return React.createElement('img', { className: 'photo', onClick: self.openLightbox.bind(self, photo.link, photo.name, photo.album), src: photo.thumbnail });
-	        })
-	      ),
-	      this.renderAfter(),
-	      self.state.link ? self.renderLightBox() : null
+	      this.state.activeAlbum || this.props.params.album ? this.renderPhotos() : this.renderAlbums(),
+	      self.state.link ? self.renderLightBox() : null,
+	      this.renderAfter()
 	    );
 	  }
 	});
@@ -27893,13 +27957,16 @@
 	  function GalleryStore() {
 	    _classCallCheck(this, GalleryStore);
 
+	    this.albums = [];
+	    this.nextAlbums = [];
 	    this.nextPage = [];
 	    this.page = 0;
 	    this.photos = [];
 	    this.thumbnails = [];
 
 	    this.bindListeners({
-	      handleUpdatePhotos: Actions.UPDATE_PHOTOS
+	      handleUpdatePhotos: Actions.UPDATE_PHOTOS,
+	      handleUpdateAlbums: Actions.UPDATE_ALBUMS
 	    });
 	  }
 
@@ -27916,6 +27983,23 @@
 	        } else {
 	          this.photos = this.nextPage;
 	          this.nextPage = response.photos.slice(0, response.photos.length > 12 ? 12 : response.photos.length);
+	        }
+	      }
+	      this.page = response.page;
+	    }
+	  }, {
+	    key: 'handleUpdateAlbums',
+	    value: function handleUpdateAlbums(response) {
+	      if (response.page < this.page) {
+	        this.nextAlbums = response.albums.slice(12);
+	        this.albums = response.albums.slice(0, 12);
+	      } else {
+	        if (this.nextAlbums.length == 0) {
+	          this.albums = response.albums.slice(0, response.albums.length > 12 ? 12 : response.albums.length);
+	          this.nextAlbums = response.albums.slice(12);
+	        } else {
+	          this.albums = this.nextAlbums;
+	          this.nextAlbums = response.albums.slice(0, response.photos.length > 12 ? 12 : response.albums.length);
 	        }
 	      }
 	      this.page = response.page;
@@ -27957,6 +28041,19 @@
 	    key: 'updatePhotos',
 	    value: function updatePhotos(posts) {
 	      this.dispatch(posts);
+	    }
+	  }, {
+	    key: 'loadAlbums',
+	    value: function loadAlbums(page) {
+	      var instance = this;
+	      Ajax.Get('/albums/' + page, function (data) {
+	        instance.actions.updateAlbums({ albums: JSON.parse(data), page: page });
+	      });
+	    }
+	  }, {
+	    key: 'updateAlbums',
+	    value: function updateAlbums(albums) {
+	      this.dispatch(albums);
 	    }
 	  }]);
 

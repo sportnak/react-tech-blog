@@ -3,13 +3,13 @@
 var React = require("react");
 var Router = require("react-router");
 
-export default class GalleryController extends React.Component {
+export default class PhotoController extends React.Component {
   renderGalleryOptions() {
     return (
       <div className="gallery-options__container">
       </div>
     );
-  },
+  }
   render() {
     return(
       <div>

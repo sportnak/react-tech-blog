@@ -138,6 +138,43 @@ app.post('/database/post', function (req, res){
     });
 });
 
+app.get('/albums/:page', function (req, res) {
+  if (req.params.page < 0) {
+    res.status(404).send();
+  }
+  var start = req.params.page * 12;
+  var end = start + 24;
+  ConnectToDb (connectionString, function (connection){
+    if (connection.status == 'SUCCESS') {
+      var max = 0;
+      connection.client
+      .query('SELECT max(id) FROM albums;')
+      .on('row', function(row){
+        max = row.max;
+      })
+      .on('end', function(result){
+        var id = 'id > ' + (max - end) + ' AND id > 0 AND id <= ' + (max - start);
+        if (max < 12) {
+          id = 'id > -1';
+        }
+        var rows = [];
+        connection.client
+        .query('SELECT * FROM albums WHERE ' + id + ' ORDER BY id DESC;')
+        .on('row', function(row){
+          rows.push(row);
+        })
+        .on('end', function(result){
+          res.send(rows);
+          connection.fin();
+        });
+      });
+    } else {
+      DbConnectionFail(res);
+      res.status(500).send();
+    }
+  });
+});
+
 app.get('/page/photos/:page', function (req, res) {
   if (req.params.page >= 0) {
     var start = req.params.page * 12;

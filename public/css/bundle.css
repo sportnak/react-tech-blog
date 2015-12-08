@@ -48,6 +48,28 @@
   top: 90px;
   width: 100%;
 }
+.photo__container .photo-gallery__container .album-container__album {
+  background-position: 20% 10px;
+  cursor: pointer;
+  display: inline-block;
+  height: 300px;
+  margin: 8px 8px 8px 0;
+  position: relative;
+  width: 70%;
+}
+.photo__container .photo-gallery__container .album-container__album__cover {
+  background: rgba(0, 0, 0, 0.4);
+  height: 100%;
+  width: 100%;
+}
+.photo__container .photo-gallery__container .album-container__album__cover__text {
+  color: white;
+  font-size: 36px;
+  margin: 8px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
 .photo__container .photo-gallery__container__photos {
   padding: 0 45px;
 }
