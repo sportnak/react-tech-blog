@@ -73,7 +73,7 @@ var GalleryController = React.createClass({
   renderBefore() {
     if (this.state.page != 0) {
       return (
-        <div className="photo-gallery__container__photos--before" onClick={this.prevPage.bind(self)}>
+        <div className="photo-gallery__container__photos--before" onClick={this.prevPage}>
           <div className="before-icon"/>
         </div>
       );
