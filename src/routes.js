@@ -14,6 +14,8 @@ var PhotoController = require('./shared/components/Photos/PhotoController');
 var AddPhotoController = require('./shared/components/Photos/AddPhotoController');
 var GalleryController = require('./shared/components/Photos/GalleryController');
 
+var ResumeController = require('./shared/components/Resume/ResumeController');
+
 export default (
 	<Route path='/' component={ AppController }> 
     	<IndexRoute component= { HomeController }/>
@@ -30,6 +32,7 @@ export default (
 				</Route>
 			</Route>
 		</Route>
+		<Route path='resume' component={ ResumeController }/>
 		<Route path='server_error' component={ ServerErrorController }/>
 	</Route>
 );

@@ -1,0 +1,207 @@
+.resume {
+  background: black;
+  color: white;
+  min-width: 700px;
+  position: absolute;
+  top: 45px;
+  width: 100%;
+
+  &__header {
+    background: #242424;
+    margin: 25px 25px 0;
+    padding: 0 0 25px;
+    position: relative;
+
+    &__profile {
+      height: 150px;
+      text-align: center;
+      width: 100%;
+
+      &__image {
+        background: none;
+        height: 100%;
+      }
+    }
+
+    &__info {
+      text-align: center;
+      width: 100%;
+
+      &__name {
+
+      }
+
+      &__email {
+
+      }
+
+      &__other {
+
+      }
+    }
+  }
+
+  &__container {
+    background: #1f1f1f;
+    display: flex;
+    height: 80%;
+    margin: 0 25px 25px;
+    padding: 25px 0 0;
+
+    .main {
+      flex: .7;
+
+      &__work {
+        display: flex;
+        height: 400px;
+
+        &__wrapper {
+          flex: 6;
+          min-width: 400px;
+          position: relative;
+
+          &__company {
+            background: none;
+            bottom: 0;
+            height: 60px;
+            left: 0;
+            margin: auto;
+            position: absolute;
+            right: 0;
+            text-align: center;
+            top: 0;
+            width: 300px;
+          }
+
+          .circle {
+            &__main {
+              border: 3px solid #34abd9;
+              border-radius: 150px;
+              bottom: 0;
+              height: 300px;
+              left: 0;
+              margin: auto;
+              position: absolute;
+              right: 0;
+              text-align: center;
+              top: 0;
+              transition: all 1s ease;
+              width: 300px;
+
+              .exp {
+                border: 2px solid #2f2f2f;
+                border-radius: 50px;
+                bottom: 0;
+                cursor: pointer;
+                height: 100px;
+                left: 0;
+                margin: auto;
+                position: absolute;
+                right: 0;
+                top: 0;
+                transition: all 1s ease;
+                width: 100px;
+
+                &:hover {
+                  border: 2px solid white;
+                }
+              }
+
+              .item-one {
+                background: white;
+
+                &--selected--1 {
+                  transform: translateY(-150px);
+                }
+
+                &--selected--2 {
+                  transform: translateY(-150px) rotate(-120deg);
+                }
+
+                &--selected--3 {
+                  transform: translateY(-150px) rotate(120deg);
+                }
+
+                &__image {
+                  height: 90px;
+                  margin: 5px 5px 0 0;
+                }
+              }
+
+              .item-two {
+                background: #2d2d2d;
+
+                &--selected--1 {
+                  transform: rotate(-30deg) translate(-150px) rotate(30deg);
+                }
+                
+                &--selected--2 {
+                  transform: rotate(-30deg) translate(-150px) rotate(-90deg);
+                }
+
+                &--selected--3 {
+                  transform: rotate(-30deg) translate(-150px) rotate(150deg);
+                }
+
+                &__image {
+                  margin: 35px 0 0;
+                  width: 85px;
+                }
+              }
+
+              .item-three {
+                background: black;
+
+                &--selected--1 {
+                  transform: rotate(30deg) translate(150px) rotate(-30deg);
+                }
+
+                &--selected--2 {
+                  transform: rotate(30deg) translate(150px) rotate(-150deg);
+                }
+
+                &--selected--3 {
+                  transform: rotate(30deg) translate(150px) rotate(90deg);
+                }
+
+                &__image {
+                  margin: 15px 0 0;
+                  width: 67px;
+                }
+              }
+            }
+          }
+        }
+
+        &__info {
+          flex: 4;
+
+          &__company {
+            a {
+              color: white;
+            }
+          }
+        }
+      }
+
+      &__projects {
+        background: blue;
+        height: 100px;
+      }
+
+      &__education {
+        background: purple;
+        height: 100px;
+      }
+    }
+
+    .right {
+      flex: .3;
+
+      &__skills {
+        background: yellow;
+        height: 80%;
+      }
+    }
+  }
+}
