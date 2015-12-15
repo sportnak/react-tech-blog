@@ -473,7 +473,8 @@ h2 {
   padding: 25px 0 0;
 }
 .resume__container .main {
-  flex: .8;
+  flex: .7;
+  margin: 0 10px 0 0;
 }
 .resume__container .main__work {
   display: flex;
@@ -582,17 +583,129 @@ h2 {
   color: white;
 }
 .resume__container .main__projects {
-  background: blue;
-  height: 100px;
+  padding: 25px 25px 0;
 }
-.resume__container .main__education {
-  background: purple;
+.resume__container .main__education__title {
+  padding: 25px 25px 0;
+}
+.resume__container .main__education ul {
+  padding: 0;
+}
+.resume__container .main__education .school__container {
+  display: flex;
+  list-style: none;
+  padding: 25px 0 25px 25px;
+}
+.resume__container .main__education .school__container .school-container {
+  flex: 2;
+}
+.resume__container .main__education .school__container .school-container .school {
+  background: black;
+  border: 2px solid #2f2f2f;
+  border-radius: 50px;
+  cursor: pointer;
   height: 100px;
+  position: relative;
+  transition: all 1s ease;
+  width: 100px;
+}
+.resume__container .main__education .school__container .school-container .school__image {
+  bottom: 0;
+  flex: 8;
+  left: 0;
+  margin: auto;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 67px;
+}
+.resume__container .main__education .school__container .description {
+  padding: 0 0 0 25px;
+}
+.resume__container .main__education .school__container .description__name {
+  font-family: 'Ubuntu-Italic';
 }
 .resume__container .right {
-  flex: .2;
+  background: #373737;
+  flex: .3;
+  margin: -25px 0 0;
 }
 .resume__container .right__skills {
-  background: yellow;
-  height: 80%;
+  height: 100%;
+  margin: 10px 0 10px 10px;
+}
+.resume__container .right__skills ul {
+  list-style: none;
+  padding: 0;
+}
+.resume__container .right__skills ul .skill {
+  display: flex;
+  margin: 10px 0;
+}
+.resume__container .right__skills ul .skill__container {
+  margin: 10px 10px 10px 0;
+  width: 100%;
+}
+.resume__container .right__skills ul .skill__container__language {
+  background: #8f8f8f;
+  border-radius: 3px;
+  height: 25px;
+  position: relative;
+  width: 100%;
+}
+.resume__container .right__skills ul .skill__container__language div {
+  height: 25px;
+}
+.resume__container .right__skills ul .skill__container__language .javascript {
+  background: #03a22d;
+  border-radius: 3px;
+  width: 70%;
+}
+.resume__container .right__skills ul .skill__container__language .c-sharp {
+  background: #164ca1;
+  border-radius: 3px;
+  width: 40%;
+}
+.resume__container .right__skills ul .skill__container__language .html-css {
+  background: #ce3232;
+  border-radius: 3px;
+  width: 75%;
+}
+.resume__container .right__skills ul .skill__container__language .java {
+  background: #f4e30c;
+  border-radius: 3px;
+  width: 45%;
+}
+.resume__container .right__skills ul .skill__container__language .python {
+  background: #5418a5;
+  border-radius: 3px;
+  width: 30%;
+}
+.resume__container .right__skills ul .skill__container__language .c-plus-plus {
+  background: #ce7932;
+  border-radius: 3px;
+  width: 37%;
+}
+.resume__container .right__skills ul .skill__container__language .cover {
+  background: none;
+  overflow: hidden;
+  position: absolute;
+  text-indent: 100%;
+  top: 0;
+  width: 100%;
+}
+.resume__container .right__skills ul .skill__container__language .cover:hover {
+  background: black;
+  opacity: .4;
+  text-indent: 5px;
+}
+.resume__container .right__other__title {
+  border-bottom: 1px solid #8f8f8f;
+  margin: 0 5px;
+  padding: 5px;
+  text-align: center;
+}
+.resume__container .right__other ul {
+  list-style: none;
+  padding: 20px;
 }
