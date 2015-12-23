@@ -6,6 +6,11 @@
   top: 45px;
   width: 100%;
 
+  .title {
+    border-bottom: 3px solid #8f8f8f;
+    padding: 0 25px;
+  }
+
   &__header {
     background: #242424;
     margin: 25px 25px 0;
@@ -58,7 +63,7 @@
 
         &__wrapper {
           flex: 6;
-          min-width: 400px;
+          width: 400px;
           position: relative;
 
           &__company {
@@ -135,7 +140,7 @@
                 &--selected--1 {
                   transform: rotate(-30deg) translate(-150px) rotate(30deg);
                 }
-                
+
                 &--selected--2 {
                   transform: rotate(-30deg) translate(-150px) rotate(-90deg);
                 }
@@ -186,7 +191,6 @@
       }
 
       &__projects {
-        padding: 25px 25px 0;
       }
 
       &__education {
@@ -341,6 +345,133 @@
         ul {
           list-style: none;
           padding: 20px;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .resume__container {
+    display: inline-block;
+
+    .right {
+        background: #1f1f1f;
+    }
+  }
+}
+
+@media (max-width: 450px) {
+  .resume {
+    min-width: 0;
+
+    &__header {
+      margin: 0;
+      padding: 25px;
+    }
+
+    &__container {
+      margin: 0;
+      padding: 25px;
+
+      .main {
+        display: inline-block;
+
+        &__work {
+          display: inline-block;
+          height: initial;
+
+          &__wrapper {
+            height: 300px;
+            width: 100%;
+            position: relative;
+
+            &__company {
+              font-size: 24px;
+              width: 200px;
+            }
+
+            .circle {
+              &__main {
+                border-radius: 100px;
+                height: 200px;
+                width: 200px;
+
+                .item-one {
+                  background: white;
+
+                  &--selected--1 {
+                    transform: translateY(-100px);
+                  }
+
+                  &--selected--2 {
+                    transform: translateY(-100px) rotate(-120deg);
+                  }
+
+                  &--selected--3 {
+                    transform: translateY(-100px) rotate(120deg);
+                  }
+                }
+
+                .item-two {
+                  background: #2d2d2d;
+
+                  &--selected--1 {
+                    transform: rotate(-30deg) translate(-100px) rotate(30deg);
+                  }
+
+                  &--selected--2 {
+                    transform: rotate(-30deg) translate(-100px) rotate(-90deg);
+                  }
+
+                  &--selected--3 {
+                    transform: rotate(-30deg) translate(-100px) rotate(150deg);
+                  }
+                }
+
+                .item-three {
+                  background: black;
+
+                  &--selected--1 {
+                    transform: rotate(30deg) translate(100px) rotate(-30deg);
+                  }
+
+                  &--selected--2 {
+                    transform: rotate(30deg) translate(100px) rotate(-150deg);
+                  }
+
+                  &--selected--3 {
+                    transform: rotate(30deg) translate(100px) rotate(90deg);
+                  }
+                }
+              }
+            }
+          }
+        }
+
+        &__projects {
+          padding: 0;
+        }
+
+        &__education {
+          &__title {
+            padding: 0;
+          }
+
+          .school__container {
+            display: inline-block;
+            padding: 0;
+
+            .description {
+              padding: 0;
+            }
+          }
+        }
+      }
+
+      .right {
+        &__skills {
+          margin: 0;
         }
       }
     }

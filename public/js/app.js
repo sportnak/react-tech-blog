@@ -28104,6 +28104,11 @@
 	      "div",
 	      { className: "right__skills" },
 	      React.createElement(
+	        "h2",
+	        { className: "title" },
+	        "Skills"
+	      ),
+	      React.createElement(
 	        "ul",
 	        null,
 	        React.createElement(
@@ -28119,7 +28124,7 @@
 	              React.createElement(
 	                "span",
 	                { className: "optional" },
-	                "(React, Node, jQuery, etc.)"
+	                "(React, Node, etc.)"
 	              ),
 	              " :"
 	            ),
@@ -28362,6 +28367,11 @@
 	          "div",
 	          { className: "main" },
 	          React.createElement(
+	            "h2",
+	            { className: "title" },
+	            "Work"
+	          ),
+	          React.createElement(
 	            "div",
 	            { className: "main__work" },
 	            React.createElement(
@@ -28405,7 +28415,7 @@
 	            { className: "main__projects" },
 	            React.createElement(
 	              "h2",
-	              { className: "projects__title" },
+	              { className: "projects__title title" },
 	              "Personal Projects"
 	            )
 	          ),
@@ -28414,7 +28424,7 @@
 	            { className: "main__education" },
 	            React.createElement(
 	              "h2",
-	              { className: "main__education__title" },
+	              { className: "main__education__title title" },
 	              "Education"
 	            ),
 	            React.createElement(

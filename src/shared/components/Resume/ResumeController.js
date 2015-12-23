@@ -3,7 +3,7 @@
 var React = require("react");
 var Router = require("react-router");
 //as much as this page should be information stored in a db.
-// its not necessary. 
+// its not necessary.
 
 var ResumeController = React.createClass({
   getInitialState() {
@@ -27,12 +27,13 @@ var ResumeController = React.createClass({
     }
   },
   renderSkills() {
-    return (  
+    return (
       <div className="right__skills">
+        <h2 className="title">Skills</h2>
         <ul>
           <li className="skill">
             <div className="skill__container">
-              <span>Javascript<span className="optional">(React, Node, jQuery, etc.)</span> :</span>
+              <span>Javascript<span className="optional">(React, Node, etc.)</span> :</span>
               <div className="skill__container__language javascript">
                 <div className="javascript"/>
                 <div className="cover">Majority Focus</div>
@@ -124,17 +125,18 @@ var ResumeController = React.createClass({
         </div>
         <div className="resume__container">
           <div className="main">
+            <h2 className="title">Work</h2>
             <div className="main__work">
               <div className="main__work__wrapper">
                 <div className={"circle__main circle__main--selected--" + this.state.selected}>
                   <div onClick={this.selectItem.bind(this, 1, 'Faithlife')} className={"exp item-one item-one--selected--" + this.state.selected}>
-                    <img className="item-one__image" src="/faithlife.png" /> 
+                    <img className="item-one__image" src="/faithlife.png" />
                   </div>
                   <div onClick={this.selectItem.bind(this, 2, 'Give Token')} className={"exp item-two item-two--selected--" + this.state.selected}>
                     <img className="item-two__image" src="/token_logo.png" />
                   </div>
                   <div onClick={this.selectItem.bind(this, 3, 'Vanderbilt')} className={"exp item-three item-three--selected--" + this.state.selected}>
-                    <img className="item-three__image" src="/vanderbilt_logo.png" /> 
+                    <img className="item-three__image" src="/vanderbilt_logo.png" />
                   </div>
                 </div>
                 <h2 className="main__work__wrapper__company">{this.state.companyName}</h2>
@@ -146,15 +148,15 @@ var ResumeController = React.createClass({
               </div>
             </div>
             <div className="main__projects">
-              <h2 className="projects__title">Personal Projects</h2>
+              <h2 className="projects__title title">Personal Projects</h2>
             </div>
             <div className="main__education">
-              <h2 className="main__education__title">Education</h2>
+              <h2 className="main__education__title title">Education</h2>
               <ul>
                 <li className="school__container">
                   <div className="school-container">
                     <div className="school">
-                      <img className="school__image" src="/vanderbilt_logo.png" /> 
+                      <img className="school__image" src="/vanderbilt_logo.png" />
                     </div>
                   </div>
                   <div className="description">

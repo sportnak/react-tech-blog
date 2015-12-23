@@ -352,6 +352,12 @@
     font-size: 24px;
     text-align: center;
   }
+  .nav-button-container__bar #showPosts a:after {
+    content: 'Tech';
+  }
+  .nav-button-container__bar #showAdventure a:after {
+    content: 'Adv...';
+  }
 }
 @media (min-width: 451px) and (max-width: 720px) {
   .tagline__wrapper__text {
@@ -446,6 +452,9 @@ h2 {
   top: 45px;
   width: 100%;
 }
+.resume .title {
+  border-bottom: 3px solid #8f8f8f;
+}
 .resume__header {
   background: #242424;
   margin: 25px 25px 0;
@@ -482,7 +491,7 @@ h2 {
 }
 .resume__container .main__work__wrapper {
   flex: 6;
-  min-width: 400px;
+  width: 400px;
   position: relative;
 }
 .resume__container .main__work__wrapper__company {
@@ -581,9 +590,6 @@ h2 {
 }
 .resume__container .main__work__info__company a {
   color: white;
-}
-.resume__container .main__projects {
-  padding: 25px 25px 0;
 }
 .resume__container .main__education__title {
   padding: 25px 25px 0;
@@ -708,4 +714,98 @@ h2 {
 .resume__container .right__other ul {
   list-style: none;
   padding: 20px;
+}
+@media (max-width: 900px) {
+  .resume__container {
+    display: inline-block;
+  }
+  .resume__container .right {
+    background: #1f1f1f;
+  }
+}
+@media (max-width: 450px) {
+  .resume {
+    min-width: 0;
+  }
+  .resume__header {
+    margin: 0;
+    padding: 25px;
+  }
+  .resume__container {
+    margin: 0;
+    padding: 25px;
+  }
+  .resume__container .main {
+    display: inline-block;
+  }
+  .resume__container .main__work {
+    display: inline-block;
+    height: initial;
+  }
+  .resume__container .main__work__wrapper {
+    height: 300px;
+    width: 100%;
+    position: relative;
+  }
+  .resume__container .main__work__wrapper__company {
+    font-size: 24px;
+    width: 200px;
+  }
+  .resume__container .main__work__wrapper .circle__main {
+    border-radius: 100px;
+    height: 200px;
+    width: 200px;
+  }
+  .resume__container .main__work__wrapper .circle__main .item-one {
+    background: white;
+  }
+  .resume__container .main__work__wrapper .circle__main .item-one--selected--1 {
+    transform: translateY(-100px);
+  }
+  .resume__container .main__work__wrapper .circle__main .item-one--selected--2 {
+    transform: translateY(-100px) rotate(-120deg);
+  }
+  .resume__container .main__work__wrapper .circle__main .item-one--selected--3 {
+    transform: translateY(-100px) rotate(120deg);
+  }
+  .resume__container .main__work__wrapper .circle__main .item-two {
+    background: #2d2d2d;
+  }
+  .resume__container .main__work__wrapper .circle__main .item-two--selected--1 {
+    transform: rotate(-30deg) translate(-100px) rotate(30deg);
+  }
+  .resume__container .main__work__wrapper .circle__main .item-two--selected--2 {
+    transform: rotate(-30deg) translate(-100px) rotate(-90deg);
+  }
+  .resume__container .main__work__wrapper .circle__main .item-two--selected--3 {
+    transform: rotate(-30deg) translate(-100px) rotate(150deg);
+  }
+  .resume__container .main__work__wrapper .circle__main .item-three {
+    background: black;
+  }
+  .resume__container .main__work__wrapper .circle__main .item-three--selected--1 {
+    transform: rotate(30deg) translate(100px) rotate(-30deg);
+  }
+  .resume__container .main__work__wrapper .circle__main .item-three--selected--2 {
+    transform: rotate(30deg) translate(100px) rotate(-150deg);
+  }
+  .resume__container .main__work__wrapper .circle__main .item-three--selected--3 {
+    transform: rotate(30deg) translate(100px) rotate(90deg);
+  }
+  .resume__container .main__projects {
+    padding: 0;
+  }
+  .resume__container .main__education__title {
+    padding: 0;
+  }
+  .resume__container .main__education .school__container {
+    display: inline-block;
+    padding: 0;
+  }
+  .resume__container .main__education .school__container .description {
+    padding: 0;
+  }
+  .resume__container .right__skills {
+    margin: 0;
+  }
 }
