@@ -1,16 +1,21 @@
 .post-box {
+  display: flex;
   margin: 100px 0 0;
 
+  .sidebar {
+    background-image: url('/edge4.png');
+    background-repeat-x: no-repeat;
+    background-size: contain;
+    flex: 2;
+  }
+
   ul {
-    margin-left: 12.5%;
-    padding: 0;
-    width: 75%;
+    flex: 8;
 
     .post {
       &__container {
         font-family: 'Volkorn', arial, serif;
-      	width: 80%;
-      	margin-left: 5%;
+      	width: 90%;
 
         &__content {
           font-family: 'Volkorn';
@@ -21,7 +26,7 @@
             margin: 15px 0;
           }
 
-          img {     
+          img {
             height: auto !important;
             max-width: 100% !important;
           }
@@ -36,18 +41,32 @@
 
     .post-preview {
       &__container {
-        border: 1px solid #dfdfdf;
         border-radius: 4px;
         cursor: pointer;
         margin: 20px;
         padding: 10px;
+        text-align: center;
 
-        &__content { 
+        &__content {
           font-family: 'Volkorn';
           font-size: 18px;
-          height: 90px;
           line-height: 28px;
           overflow: hidden;
+
+          img {
+            margin: 0 0 10px;
+          }
+        }
+
+        &__title {
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        &::after {
+          content: '...';
+          font-size: 24px;
+          text-align: center;
         }
       }
     }

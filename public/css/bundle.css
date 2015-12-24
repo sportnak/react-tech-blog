@@ -381,17 +381,21 @@
   }
 }
 .post-box {
+  display: flex;
   margin: 100px 0 0;
 }
+.post-box .sidebar {
+  background-image: url('/edge4.png');
+  background-repeat-x: no-repeat;
+  background-size: contain;
+  flex: 2;
+}
 .post-box ul {
-  margin-left: 12.5%;
-  padding: 0;
-  width: 75%;
+  flex: 8;
 }
 .post-box ul .post__container {
   font-family: 'Volkorn', arial, serif;
-  width: 80%;
-  margin-left: 5%;
+  width: 90%;
 }
 .post-box ul .post__container__content {
   font-family: 'Volkorn';
@@ -410,18 +414,29 @@
   text-overflow: ellipsis;
 }
 .post-box ul .post-preview__container {
-  border: 1px solid #dfdfdf;
   border-radius: 4px;
   cursor: pointer;
   margin: 20px;
   padding: 10px;
+  text-align: center;
 }
 .post-box ul .post-preview__container__content {
   font-family: 'Volkorn';
   font-size: 18px;
-  height: 90px;
   line-height: 28px;
   overflow: hidden;
+}
+.post-box ul .post-preview__container__content img {
+  margin: 0 0 10px;
+}
+.post-box ul .post-preview__container__title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.post-box ul .post-preview__container::after {
+  content: '...';
+  font-size: 24px;
+  text-align: center;
 }
 #posts {
   display: none;
@@ -454,6 +469,7 @@ h2 {
 }
 .resume .title {
   border-bottom: 3px solid #8f8f8f;
+  padding: 0 25px;
 }
 .resume__header {
   background: #242424;

@@ -87,7 +87,7 @@ var GalleryController = React.createClass({
       <div className="album-container">
         {self.state.albums.map(function (album) {
           return (
-            <div className="album-container__album" onMouseLeave={self.unhoverAlbum} onMouseEnter={self.hoverAlbum.bind(self, album.id)} onClick={self.redirectWindow.bind(self, album.name + '/0', album.name)} style={{background: 'url(' + album.link + ')', backgroundPositionY: '40%', backgroundRepeat: 'no-repeat', backgroundSize: 'cover'}}>
+            <div className="album-container__album" onMouseLeave={self.unhoverAlbum} onMouseEnter={self.hoverAlbum.bind(self, album.id)} onClick={self.redirectWindow.bind(self, album.name + '/0', album.name)} style={{background: 'url(' + album.link + ')', backgroundPositionX: '100%', backgroundPositionY: '40%', backgroundRepeat: 'no-repeat', backgroundSize: 'cover'}}>
               {self.state.hoveredAlbum >= 0 && self.state.hoveredAlbum == album.id? self.renderCover(album.name) : null}
             </div>
           );

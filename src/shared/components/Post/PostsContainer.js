@@ -8,10 +8,10 @@ var util = require('../../util');
 function checkBottom(page){
   var body = document.body,
     html = document.documentElement;
-  var height = Math.max( body.scrollHeight, body.offsetHeight, 
+  var height = Math.max( body.scrollHeight, body.offsetHeight,
     html.clientHeight, html.scrollHeight, html.offsetHeight );
-  
-  if (window.scrollY + window.innerHeight == height) { 
+
+  if (window.scrollY + window.innerHeight == height) {
     var category = this.props.route.path.toLowerCase();
     category = category[0].toUpperCase() + category.substring(1);
     PostActions.nextCategoryPage(category, page);
@@ -46,6 +46,7 @@ var PostContainer = React.createClass({
   renderPosts(){
     return (
       <div className='post-box'>
+        <div className="sidebar"></div>
         <ul style={styles.UlStyle}>
           {this.state.posts.map((post) => {
             return (
@@ -64,7 +65,7 @@ var PostContainer = React.createClass({
         <div style={{position: 'absolute', top: 0, bottom: 0, right: 0, left: 0, margin: 'auto'}}>{'You must be lost! \n Try a different category.'}</div>
       );
     }
-    
+
   }
 });
 

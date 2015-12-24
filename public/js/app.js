@@ -25396,6 +25396,7 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'post-box' },
+	      React.createElement('div', { className: 'sidebar' }),
 	      React.createElement(
 	        'ul',
 	        { style: styles.UlStyle },
@@ -27259,8 +27260,21 @@
 	  }, {
 	    key: 'renderPreviews',
 	    value: function renderPreviews() {
+	      var imgSearch = this.props.post.content;
 	      var content = this.props.post.content;
 	      content = content.substring(content.indexOf('<p>'), content.indexOf('</p>'));
+	      var img = '';
+
+	      if (content.length > 200) {
+	        content = content.substring(0, 197) + '...</p>';
+	      }
+
+	      if (imgSearch.indexOf('img') != -1) {
+	        var start = imgSearch.indexOf('<img');
+	        img = imgSearch.substring(start, imgSearch.indexOf('>', start) + 1);
+	      }
+
+	      content = img + content;
 
 	      return React.createElement(
 	        'div',
@@ -27268,7 +27282,11 @@
 	        React.createElement(
 	          'h2',
 	          { className: 'post-preview__container__title', style: styles.PostTitle },
-	          this.props.post.title
+	          React.createElement(
+	            'u',
+	            null,
+	            this.props.post.title
+	          )
 	        ),
 	        React.createElement('div', { className: 'post-preview__container__content', dangerouslySetInnerHTML: { __html: content } }),
 	        React.createElement('br', null)
@@ -27283,7 +27301,11 @@
 	        React.createElement(
 	          'h2',
 	          { style: styles.PostTitle, className: 'post__container__title' },
-	          this.props.post.title
+	          React.createElement(
+	            'u',
+	            null,
+	            this.props.post.title
+	          )
 	        ),
 	        React.createElement('div', { className: 'post__container__content', dangerouslySetInnerHTML: { __html: this.props.post.content } }),
 	        React.createElement(
@@ -27875,7 +27897,7 @@
 	      self.state.albums.map(function (album) {
 	        return React.createElement(
 	          'div',
-	          { className: 'album-container__album', onMouseLeave: self.unhoverAlbum, onMouseEnter: self.hoverAlbum.bind(self, album.id), onClick: self.redirectWindow.bind(self, album.name + '/0', album.name), style: { background: 'url(' + album.link + ')', backgroundPositionY: '40%', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' } },
+	          { className: 'album-container__album', onMouseLeave: self.unhoverAlbum, onMouseEnter: self.hoverAlbum.bind(self, album.id), onClick: self.redirectWindow.bind(self, album.name + '/0', album.name), style: { background: 'url(' + album.link + ')', backgroundPositionX: '100%', backgroundPositionY: '40%', backgroundRepeat: 'no-repeat', backgroundSize: 'cover' } },
 	          self.state.hoveredAlbum >= 0 && self.state.hoveredAlbum == album.id ? self.renderCover(album.name) : null
 	        );
 	      })
